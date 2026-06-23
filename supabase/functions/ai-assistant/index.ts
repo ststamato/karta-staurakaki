@@ -1,6 +1,6 @@
 // Supabase Edge Function: ai-assistant
-// V41.2.1 — Hermes AI Agent (Gemini function-calling, δωρεάν) για Τελετές Σταυρακάκη
-// (V41.2.1: ΜΙΑ κλήση Gemini ανά ερώτηση -> δεν χτυπάει το όριο 429 του δωρεάν tier)
+// V41.2.2 — Hermes AI Agent (Groq + Gemini, δωρεάν) για Τελετές Σταυρακάκη
+// (V41.2.2: Groq πρώτο = 100% δωρεάν χωρίς χρέωση. Gemini/agent/τοπικό ως εφεδρεία)
 // Cloud AI bridge. Υποστηρίζει:
 // - ημερήσια αναφορά
 // - ελεύθερη ερώτηση από το πεδίο "Ρώτα τον AI Βοηθό"
@@ -652,6 +652,31 @@ async function callGeminiAgent(payload: Payload) {
   return null;
 }
 
+// ΔΩΡΕΑΝ (χωρίς χρέωση/κάρτα): Groq — OpenAI-compatible API, πολύ γρήγορο.
+// Πρώτη επιλογή αν υπάρχει GROQ_API_KEY. Μία κλήση ανά ερώτηση.
+async function callGroq(payload: Payload) {
+  const apiKey = Deno.env.get("GROQ_API_KEY");
+  if (!apiKey) return null;
+
+  const model = Deno.env.get("GROQ_MODEL") || "llama-3.3-70b-versatile";
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: "system", content: SYSTEM_INSTRUCTION },
+        { role: "user", content: buildPrompt(payload) },
+      ],
+      temperature: 0.2,
+    }),
+  });
+
+  if (!res.ok) throw new Error(`Groq error ${res.status}`);
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content || null;
+}
+
 // ΔΩΡΕΑΝ: Google Gemini (gemini-2.0-flash). Μία κλήση ανά ερώτηση -> οικονομικό
 // για το δωρεάν tier (δεν χτυπάει το όριο 429). Με μία επανάληψη αν τύχει 429.
 async function callGemini(payload: Payload) {
@@ -720,8 +745,10 @@ async function callOpenAI(payload: Payload) {
 // ΣΗΜΕΙΩΣΗ V41.2.1: Βάλαμε το απλό Gemini ΠΡΩΤΟ επειδή στο δωρεάν tier το όριο
 // είναι ΑΝΑ ΛΕΠΤΟ. Ο agent έκανε 6-7 κλήσεις/ερώτηση και χτυπούσε 429. Τώρα
 // κάθε ερώτηση = 1 κλήση (αρκετά έξυπνη), και ο agent μένει ως εφεδρεία.
+// ΣΗΜΕΙΩΣΗ V41.2.2: Προστέθηκε Groq ΠΡΩΤΟ (100% δωρεάν, χωρίς χρέωση) γιατί ο
+// λογαριασμός Google είχε free tier = 0. Αν λείπει GROQ_API_KEY, αγνοείται.
 async function callCloudAI(payload: Payload) {
-  for (const provider of [callGemini, callGeminiAgent, callOpenAI]) {
+  for (const provider of [callGroq, callGemini, callGeminiAgent, callOpenAI]) {
     try {
       const answer = await provider(payload);
       if (answer) return answer;

@@ -1,0 +1,20 @@
+V41.0 — Free Brain Swap (Δωρεάν AI με Google Gemini)
+
+Τι προστέθηκε:
+- Ο Cloud AI (edge function ai-assistant) απαντά πλέον με ΔΩΡΕΑΝ μοντέλο
+  Google Gemini (gemini-2.0-flash), αν υπάρχει GEMINI_API_KEY.
+- Σειρά προτεραιότητας: Gemini -> OpenAI (παλιό) -> τοπική λογική.
+- Καμία κλήση στο μοντέλο δεν ρίχνει πλέον σφάλμα 500: σε αποτυχία
+  γυρνά τοπική απάντηση, άρα πιο σταθερό από πριν.
+
+Τι ΔΕΝ άλλαξε (χρυσοί κανόνες):
+- Καμία αλλαγή σε app.js / index.html / styles.css.
+- Ίδιο input payload, ίδια απάντηση { ok, answer }.
+- Τα κινητά των συναδέλφων δεν χρειάζονται καμία ενημέρωση.
+- Ο Hermes παραμένει read-only. Δεν στέλνει, δεν αλλάζει, δεν διαγράφει τίποτα.
+- Τίποτα δεν βγαίνει live πριν γίνει deploy η συνάρτηση από τον χρήστη.
+
+Ενεργοποίηση:
+- supabase secrets set GEMINI_API_KEY=...
+- supabase functions deploy ai-assistant
+- Οδηγίες: supabase/functions/ai-assistant/DEPLOY_V41_GEMINI.md

@@ -1,5 +1,6 @@
 // Supabase Edge Function: ai-assistant
-// V41.2 — Hermes AI Agent (Gemini function-calling, δωρεάν) για Τελετές Σταυρακάκη
+// V41.2.1 — Hermes AI Agent (Gemini function-calling, δωρεάν) για Τελετές Σταυρακάκη
+// (V41.2.1: ΜΙΑ κλήση Gemini ανά ερώτηση -> δεν χτυπάει το όριο 429 του δωρεάν tier)
 // Cloud AI bridge. Υποστηρίζει:
 // - ημερήσια αναφορά
 // - ελεύθερη ερώτηση από το πεδίο "Ρώτα τον AI Βοηθό"
@@ -651,31 +652,42 @@ async function callGeminiAgent(payload: Payload) {
   return null;
 }
 
-// ΔΩΡΕΑΝ: Google Gemini (gemini-2.0-flash). Πρώτη επιλογή αν υπάρχει key.
+// ΔΩΡΕΑΝ: Google Gemini (gemini-2.0-flash). Μία κλήση ανά ερώτηση -> οικονομικό
+// για το δωρεάν tier (δεν χτυπάει το όριο 429). Με μία επανάληψη αν τύχει 429.
 async function callGemini(payload: Payload) {
   const apiKey = Deno.env.get("GEMINI_API_KEY");
   if (!apiKey) return null;
 
   const model = Deno.env.get("GEMINI_MODEL") || "gemini-2.0-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      system_instruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-      contents: [{ role: "user", parts: [{ text: buildPrompt(payload) }] }],
-      generationConfig: { temperature: 0.2 },
-    }),
+  const reqBody = JSON.stringify({
+    system_instruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
+    contents: [{ role: "user", parts: [{ text: buildPrompt(payload) }] }],
+    generationConfig: { temperature: 0.2 },
   });
 
-  if (!res.ok) throw new Error(`Gemini error ${res.status}`);
-  const data = await res.json();
-  const text = data?.candidates?.[0]?.content?.parts
-    ?.map((p: any) => p?.text || "")
-    .join("")
-    .trim();
-  return text || null;
+  // Μία επανάληψη με μικρή αναμονή αν χτυπήσει το όριο (429) του δωρεάν tier.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: reqBody,
+    });
+
+    if (res.status === 429 && attempt === 0) {
+      await new Promise((r) => setTimeout(r, 1500));
+      continue;
+    }
+
+    if (!res.ok) throw new Error(`Gemini error ${res.status}`);
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts
+      ?.map((p: any) => p?.text || "")
+      .join("")
+      .trim();
+    return text || null;
+  }
+  return null;
 }
 
 // Παλιό μονοπάτι OpenAI — διατηρείται ως εφεδρεία (αν υπάρχει OPENAI_API_KEY).
@@ -701,11 +713,15 @@ async function callOpenAI(payload: Payload) {
   return data?.choices?.[0]?.message?.content || null;
 }
 
-// Δοκιμάζει με σειρά: Gemini Agent (εργαλεία) -> απλό Gemini -> OpenAI.
-// Καμία αποτυχία δεν "σκάει": αν όλα αποτύχουν, επιστρέφει null και απαντά
-// ο τοπικός localFallback.
+// Δοκιμάζει με σειρά: απλό Gemini (ΜΙΑ κλήση -> δωρεάν-friendly) -> Gemini Agent
+// (εργαλεία, μόνο αν χρειαστεί) -> OpenAI. Καμία αποτυχία δεν "σκάει": αν όλα
+// αποτύχουν, επιστρέφει null και απαντά ο τοπικός localFallback.
+//
+// ΣΗΜΕΙΩΣΗ V41.2.1: Βάλαμε το απλό Gemini ΠΡΩΤΟ επειδή στο δωρεάν tier το όριο
+// είναι ΑΝΑ ΛΕΠΤΟ. Ο agent έκανε 6-7 κλήσεις/ερώτηση και χτυπούσε 429. Τώρα
+// κάθε ερώτηση = 1 κλήση (αρκετά έξυπνη), και ο agent μένει ως εφεδρεία.
 async function callCloudAI(payload: Payload) {
-  for (const provider of [callGeminiAgent, callGemini, callOpenAI]) {
+  for (const provider of [callGemini, callGeminiAgent, callOpenAI]) {
     try {
       const answer = await provider(payload);
       if (answer) return answer;

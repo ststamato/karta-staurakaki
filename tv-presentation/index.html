@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Γραφείο Τελετών Σταυρακάκη</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:   #0c1a1d;
+      --gold: #c9ad7f;
+      --gold2:#8f7650;
+      --muted: rgba(255,255,255,.72);
+      --border: rgba(201,173,127,.18);
+      --card:  rgba(255,255,255,.055);
+    }
+
+    html, body {
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      font-family: "Manrope", system-ui, sans-serif;
+      color: #fff;
+    }
+    img { display: block; }
+
+    /* ─── Slideshow ─── */
+    #ss { position: relative; width: 100%; height: 100%; }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+      pointer-events: none;
+    }
+    .slide.active { opacity: 1; pointer-events: auto; }
+
+    /* ─── Background ─── */
+    .bg { position: absolute; inset: 0; overflow: hidden; }
+    .bg img { width: 100%; height: 100%; object-fit: cover; transform-origin: center center; }
+    @keyframes kb { from { transform: scale(1); } to { transform: scale(1.07); } }
+    .bg.run img { animation: kb 18s ease-out forwards; }
+
+    /* Overlays */
+    .ol-l   { position: absolute; inset: 0; background: linear-gradient(100deg, rgba(8,14,18,.94) 0%, rgba(8,14,18,.72) 44%, rgba(8,14,18,.16) 100%); }
+    .ol-c   { position: absolute; inset: 0; background: rgba(8,14,18,.64); }
+    .ol-d   { position: absolute; inset: 0; background: rgba(8,14,18,.82); }
+
+    /* ─── Contact bar (injected by JS) ─── */
+    .cbar {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(10,18,22,.93);
+      border-top: 1px solid rgba(201,173,127,.22);
+      padding: 15px 56px;
+      display: flex; align-items: center;
+    }
+    .ci {
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 0 28px;
+      border-right: 1px solid rgba(255,255,255,.1);
+    }
+    .ci:first-child { padding-left: 0; }
+    .ci label { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+    .ci strong { font-size: .96rem; font-weight: 700; }
+    .clogo {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 12px;
+      padding-left: 28px;
+      border-left: 1px solid rgba(255,255,255,.1);
+    }
+    .mk {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(135deg, #c6aa79, #8f7650);
+      display: flex; align-items: center; justify-content: center;
+      font-family: "Cormorant Garamond", serif; font-size: 1.55rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .mkt strong { display: block; font-size: .84rem; font-weight: 700; }
+    .mkt small  { color: var(--muted); font-size: .7rem; }
+
+    /* ─── Layout containers ─── */
+    .z2 { position: relative; z-index: 2; }
+
+    /* Hero: full-slide flex column */
+    .lh {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 68px 80px 96px;
+    }
+
+    /* Center: same but less top pad, used for grid slides */
+    .lc {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 44px 60px 96px;
+    }
+
+    /* Split two-column */
+    .ls {
+      width: 100%; height: 100%;
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .ls-l {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 64px 52px 96px 60px;
+    }
+    .ls-r {
+      display: flex; align-items: center; justify-content: center;
+      padding: 52px 56px 96px 28px;
+    }
+
+    /* ─── Typography ─── */
+    .ey {
+      display: inline-flex; align-items: center; gap: 14px;
+      font-size: .8rem; letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); font-weight: 700;
+      margin-bottom: 20px;
+    }
+    .ey::before { content: ""; width: 40px; height: 1px; background: var(--gold); flex-shrink: 0; }
+
+    .txl {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(3.4rem, 6.8vw, 6.8rem);
+      font-weight: 700; line-height: .9; letter-spacing: -.025em;
+    }
+    .tlg {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2.6rem, 4.6vw, 4.8rem);
+      font-weight: 600; line-height: .95; letter-spacing: -.02em;
+    }
+    .tmd {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(1.9rem, 3.1vw, 3.4rem);
+      font-weight: 600; line-height: 1.02; letter-spacing: -.015em;
+    }
+    .body { font-size: 1.06rem; line-height: 1.8; color: var(--muted); }
+
+    /* ─── Service cards ─── */
+    .sg  { display: grid; gap: 14px; margin-top: 24px; }
+    .sg4 { grid-template-columns: repeat(4,1fr); }
+    .sg3 { grid-template-columns: repeat(3,1fr); }
+
+    .sc {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 18px;
+    }
+    .sn  { font-size: .74rem; font-weight: 800; color: var(--gold); margin-bottom: 10px; display: block; letter-spacing: .08em; }
+    .sc h4 { font-size: .96rem; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+    .sc p  { font-size: .8rem; color: var(--muted); line-height: 1.62; }
+
+    /* ─── Gallery ─── */
+    .g  { display: grid; gap: 12px; }
+    .g4 { grid-template-columns: repeat(4,1fr); }
+    .g3 { grid-template-columns: repeat(3,1fr); }
+
+    .gi  { border-radius: 12px; overflow: hidden; position: relative; }
+    .gi img { width: 100%; object-fit: cover; display: block; }
+    .gc {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 10px 13px;
+      background: linear-gradient(0deg, rgba(8,14,18,.9), transparent);
+      font-size: .84rem; font-weight: 700;
+    }
+
+    /* ─── Why cards ─── */
+    .wg { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 28px; }
+    .wc { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px 24px; }
+    .wc h4 { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 10px; }
+    .wc p  { font-size: .83rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── Contact rows ─── */
+    .crows { display: flex; flex-direction: column; gap: 22px; margin-top: 34px; }
+    .crow  { display: flex; flex-direction: column; gap: 5px; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .crow:last-child { border-bottom: none; padding-bottom: 0; }
+    .crow label  { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+    .crow strong { font-family: "Cormorant Garamond", serif; font-size: 2.1rem; font-weight: 600; line-height: 1; }
+
+    /* ─── Progress bar & dots ─── */
+    #prog {
+      position: fixed; bottom: 0; left: 0; height: 3px; width: 0%;
+      background: linear-gradient(90deg, var(--gold2), var(--gold));
+      z-index: 200;
+    }
+    #dots {
+      position: fixed; bottom: 19px; right: 56px;
+      display: flex; gap: 8px; z-index: 200;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.28); transition: background .3s, transform .3s; }
+    .dot.on { background: var(--gold); transform: scale(1.5); }
+  </style>
+</head>
+<body>
+
+<div id="ss">
+
+  <!-- ─── 1. INTRO ─── -->
+  <div class="slide active" data-dur="9000">
+    <div class="bg run"><img src="assets/hero-bg.jpg" alt=""></div>
+    <div class="ol-l"></div>
+    <div class="lh z2">
+      <div class="ey">Με σεβασμό στη στιγμή · Με φροντίδα σε κάθε λεπτομέρεια</div>
+      <div class="txl" style="max-width:13ch; margin-bottom:28px">
+        Γραφείο Τελετών<br>Σταυρακάκη
+      </div>
+      <p class="body" style="max-width:52ch">
+        Διακριτική, ολοκληρωμένη υποστήριξη για κάθε τελετή.<br>
+        Στεκόμαστε δίπλα σε κάθε οικογένεια με επαγγελματισμό,<br>
+        συνέπεια και ανθρώπινη προσέγγιση.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── 2. ABOUT ─── -->
+  <div class="slide" data-dur="8500">
+    <div class="bg"><img src="assets/hero_candle.jpg" alt=""></div>
+    <div class="ol-l"></div>
+    <div class="lh z2">
+      <div class="ey">Το γραφείο μας</div>
+      <div class="tlg" style="max-width:16ch; margin-bottom:26px">
+        Ένα αποτέλεσμα που εμπνέει εμπιστοσύνη από την πρώτη εικόνα.
+      </div>
+      <p class="body" style="max-width:58ch">
+        Από την πρώτη επικοινωνία έως την ολοκλήρωση της τελετής, φροντίζουμε κάθε στάδιο
+        με ακρίβεια, διακριτικότητα και αισθητική συνέπεια. Όχι πρόχειρες λύσεις —
+        σωστή οργάνωση, καθαρή εικόνα και επιλογές που τιμούν τη μνήμη του ανθρώπου σας.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── 3. SERVICES 1–4 ─── -->
+  <div class="slide" data-dur="10000">
+    <div class="bg run"><img src="assets/decor_grand.jpg" alt=""></div>
+    <div class="ol-d"></div>
+    <div class="lc z2">
+      <div class="ey">Υπηρεσίες</div>
+      <div class="tmd">Ολοκληρωμένη υποστήριξη με καθαρή οργάνωση και ουσιαστική φροντίδα.</div>
+      <div class="sg sg4">
+        <div class="sc">
+          <span class="sn">01</span>
+          <h4>Οργάνωση κηδειών &amp; μνημοσύνων</h4>
+          <p>Πλήρης επιμέλεια και συντονισμός με διακριτικότητα και φροντίδα σε κάθε λεπτομέρεια.</p>
+        </div>
+        <div class="sc">
+          <span class="sn">02</span>
+          <h4>Πολιτικές κηδείες</h4>
+          <p>Υποστήριξη τελετών με σεβασμό στις επιθυμίες της οικογένειας και τον χαρακτήρα της διαδικασίας.</p>
+        </div>
+        <div class="sc">
+          <span class="sn">03</span>
+          <h4>Μεταφορά σορού σε όλη την Ελλάδα</h4>
+          <p>Επαγγελματισμός, συνέπεια και σωστός χειρισμός σε κάθε στάδιο της μεταφοράς.</p>
+        </div>
+        <div class="sc">
+          <span class="sn">04</span>
+          <h4>Επαναπατρισμός εξωτερικού</h4>
+          <p>Συντονισμός μεταφοράς από και προς το εξωτερικό με υπευθυνότητα και καθαρή ενημέρωση.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 4. SERVICES 5–7 ─── -->
+  <div class="slide" data-dur="9000">
+    <div class="bg run"><img src="assets/decor_balanced.jpg" alt=""></div>
+    <div class="ol-d"></div>
+    <div class="lc z2">
+      <div class="ey">Υπηρεσίες · συνέχεια</div>
+      <div class="tmd">Πρακτική στήριξη σε κάθε στάδιο της διαδικασίας.</div>
+      <div class="sg sg3">
+        <div class="sc">
+          <span class="sn">05</span>
+          <h4>Αποτέφρωση</h4>
+          <p>Συντονισμός διαδικασίας αποτέφρωσης με πρακτική στήριξη και σεβασμό στη βούληση της οικογένειας.</p>
+        </div>
+        <div class="sc">
+          <span class="sn">06</span>
+          <h4>Ανθοστολισμοί &amp; στολισμός τελετής</h4>
+          <p>Κομψές ανθοσυνθέσεις και στολισμός εκκλησίας ή χώρου τελετής με αισθητική συνέπεια και διακριτικό ύφος.</p>
+        </div>
+        <div class="sc">
+          <span class="sn">07</span>
+          <h4>Διεκπεραίωση απαραίτητων εγγράφων</h4>
+          <p>Αναλαμβάνουμε την υποστήριξη ώστε η οικογένεια να επιβαρύνεται όσο το δυνατόν λιγότερο.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 5. COFFINS ─── -->
+  <div class="slide" data-dur="9000">
+    <div class="ls z2">
+      <div class="ls-l">
+        <div class="ey">Φέρετρα</div>
+        <div class="tlg" style="max-width:14ch; margin-bottom:24px">
+          Επιλεγμένες προτάσεις υψηλής αισθητικής και ποιοτικής κατασκευής.
+        </div>
+        <p class="body" style="max-width:42ch">
+          Κλασικές και πιο επιβλητικές επιλογές, με προσεγμένο φινίρισμα και σοβαρή παρουσία.
+          Η επιλογή παρουσιάζεται με διακριτικότητα, ώστε η οικογένεια να αποφασίζει
+          με ηρεμία και καθαρή εικόνα.
+        </p>
+      </div>
+      <div class="ls-r">
+        <div class="g g4" style="width:100%">
+          <div class="gi"><img src="assets/coffin_warm.jpg"     alt="" style="height:300px"><div class="gc">Κλασικό καρυδί</div></div>
+          <div class="gi"><img src="assets/coffin_dark.jpg"     alt="" style="height:300px"><div class="gc">Σκούρο γυαλιστερό</div></div>
+          <div class="gi"><img src="assets/coffin_mahogany.jpg" alt="" style="height:300px"><div class="gc">Prestige μαόνι</div></div>
+          <div class="gi"><img src="assets/coffin_black.jpg"    alt="" style="height:300px"><div class="gc">Premium μαύρο</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 6. WREATHS ─── -->
+  <div class="slide" data-dur="9000">
+    <div class="ls z2" style="direction:rtl">
+      <div class="ls-l" style="direction:ltr">
+        <div class="ey">Στεφάνια</div>
+        <div class="tlg" style="max-width:15ch; margin-bottom:24px">
+          Ανθοσυνθέσεις που αποπνέουν σεβασμό και ποιότητα.
+        </div>
+        <p class="body" style="max-width:42ch">
+          Από κλασικές λευκές συνθέσεις έως πιο ιδιαίτερες premium επιλογές,
+          τα στεφάνια επιμελούνται με φρέσκα άνθη και ισορροπημένη αισθητική.
+        </p>
+      </div>
+      <div class="ls-r" style="direction:ltr">
+        <div class="g g4" style="width:100%">
+          <div class="gi"><img src="assets/wreath_white.jpg"   alt="" style="height:300px; object-position:center 16%"><div class="gc">Κλασικό λευκό</div></div>
+          <div class="gi"><img src="assets/wreath_rose.jpg"    alt="" style="height:300px; object-position:center 16%"><div class="gc">Λευκά τριαντάφυλλα</div></div>
+          <div class="gi"><img src="assets/wreath_premium.jpg" alt="" style="height:300px; object-position:center 16%"><div class="gc">Premium σύνθεση</div></div>
+          <div class="gi"><img src="assets/wreath_orchid.jpg"  alt="" style="height:300px; object-position:center 16%"><div class="gc">Σύνθεση με ορχιδέες</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 7. CHURCH / DETAIL ─── -->
+  <div class="slide" data-dur="8000">
+    <div class="bg run"><img src="assets/church_overview.jpg" alt=""></div>
+    <div class="ol-c"></div>
+    <div class="lh z2" style="align-items:center; text-align:center">
+      <div class="ey" style="justify-content:center">Η λεπτομέρεια κάνει τη διαφορά</div>
+      <div class="tlg" style="max-width:19ch; margin: 0 auto 26px">
+        Κάθε εικόνα του χώρου πρέπει να αποπνέει ηρεμία και επαγγελματισμό.
+      </div>
+      <p class="body" style="max-width:55ch; margin: 0 auto">
+        Το αποτέλεσμα δεν κρίνεται μόνο από το τι υπάρχει, αλλά από το πώς παρουσιάζεται.
+        Σωστή σύνθεση, ισορροπία στον χώρο και καθαρή αισθητική είναι αυτά που μένουν στη μνήμη.
+      </p>
+    </div>
+  </div>
+
+  <!-- ─── 8. DECORATION GALLERY ─── -->
+  <div class="slide" data-dur="9000">
+    <div class="lc z2">
+      <div class="ey">Στολισμός τελετής</div>
+      <div class="tmd">Συμμετρία, ηρεμία και κομψότητα στον χώρο της εκκλησίας.</div>
+      <div class="g g3" style="margin-top:26px">
+        <div class="gi"><img src="assets/decor_grand.jpg"    alt="" style="height:420px"><div class="gc">Κεντρικός στολισμός</div></div>
+        <div class="gi"><img src="assets/hero_candle.jpg"    alt="" style="height:420px"><div class="gc">Κεντρική σύνθεση</div></div>
+        <div class="gi"><img src="assets/decor_balanced.jpg" alt="" style="height:420px"><div class="gc">Στολισμός διαδρόμου</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 9. WHY US ─── -->
+  <div class="slide" data-dur="9000">
+    <div class="bg run"><img src="assets/hero-bg.jpg" alt=""></div>
+    <div class="ol-d"></div>
+    <div class="lc z2">
+      <div class="ey">Γιατί να επιλέξετε το γραφείο μας</div>
+      <div class="tmd">Όταν χρειάζεται σοβαρότητα, δεν χωρούν μισές δουλειές.</div>
+      <div class="wg">
+        <div class="wc">
+          <h4>Διακριτικότητα</h4>
+          <p>Κάθε επικοινωνία και κάθε επιλογή αντιμετωπίζονται με σεβασμό και μέτρο.</p>
+        </div>
+        <div class="wc">
+          <h4>Επαγγελματισμός</h4>
+          <p>Οργάνωση με σαφήνεια, συνέπεια και φροντίδα σε κάθε πρακτική λεπτομέρεια.</p>
+        </div>
+        <div class="wc">
+          <h4>Αισθητική συνέπεια</h4>
+          <p>Σωστή εικόνα σε φέρετρα, στεφάνια και στολισμό, χωρίς υπερβολές και προχειρότητες.</p>
+        </div>
+        <div class="wc">
+          <h4>Ανθρώπινη προσέγγιση</h4>
+          <p>Καθοδήγηση με ηρεμία και πραγματική υποστήριξη στις δύσκολες στιγμές.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 10. CONTACT ─── -->
+  <div class="slide" data-dur="10000">
+    <div class="ls z2">
+      <div class="ls-l">
+        <div class="ey">Επικοινωνία</div>
+        <div class="tlg" style="max-width:15ch; margin-bottom:0">
+          Είμαστε δίπλα σας με άμεση ανταπόκριση και διακριτική εξυπηρέτηση.
+        </div>
+        <div class="crows">
+          <div class="crow"><label>Τηλέφωνο</label><strong>210 6542000</strong></div>
+          <div class="crow"><label>Κινητό</label><strong>698 7171717</strong></div>
+          <div class="crow"><label>Διεύθυνση</label><strong>Μεσογείων 325, Χολαργός</strong></div>
+          <div class="crow"><label>Εξυπηρέτηση</label><strong>24 ώρες · 365 ημέρες</strong></div>
+        </div>
+      </div>
+      <div style="position:relative; overflow:hidden">
+        <img src="assets/church_overview.jpg" alt="" style="width:100%; height:100%; object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(280deg,transparent 40%,rgba(8,14,18,.55) 100%)"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#ss -->
+
+<div id="prog"></div>
+<div id="dots"></div>
+
+<script>
+(function () {
+  /* ─── Contact bar template ─── */
+  const CBAR = `<div class="cbar">
+    <div class="ci"><label>Τηλέφωνο</label><strong>210 6542000</strong></div>
+    <div class="ci"><label>Κινητό</label><strong>698 7171717</strong></div>
+    <div class="ci"><label>Διεύθυνση</label><strong>Μεσογείων 325, Χολαργός</strong></div>
+    <div class="ci" style="border-right:none"><label>Εξυπηρέτηση</label><strong>24 ώρες / 365 ημέρες</strong></div>
+    <div class="clogo">
+      <div class="mk">Σ</div>
+      <div class="mkt">
+        <strong>Γραφείο Τελετών Σταυρακάκη</strong>
+        <small>Χολαργός · Μεσογείων 325</small>
+      </div>
+    </div>
+  </div>`;
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prog   = document.getElementById('prog');
+  const dotsEl = document.getElementById('dots');
+
+  /* Inject contact bar into every slide */
+  slides.forEach(s => s.insertAdjacentHTML('beforeend', CBAR));
+
+  /* Create dot indicators */
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    dotsEl.appendChild(d);
+  });
+  const dotEls = dotsEl.querySelectorAll('.dot');
+
+  let cur  = 0;
+  let timer = null;
+  let raf   = null;
+  let t0    = null;
+
+  function restartKenBurns(slide) {
+    const bg = slide.querySelector('.bg');
+    if (!bg) return;
+    bg.classList.remove('run');
+    void bg.offsetWidth;   /* force reflow to restart animation */
+    bg.classList.add('run');
+  }
+
+  function showSlide(idx) {
+    slides[cur].classList.remove('active');
+    dotEls[cur].classList.remove('on');
+    cur = (idx + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    dotEls[cur].classList.add('on');
+    restartKenBurns(slides[cur]);
+    tick();
+  }
+
+  function tick() {
+    clearTimeout(timer);
+    cancelAnimationFrame(raf);
+    const dur = parseInt(slides[cur].dataset.dur) || 8000;
+    t0 = performance.now();
+
+    function frame(ts) {
+      const pct = Math.min((ts - t0) / dur * 100, 100);
+      prog.style.width = pct + '%';
+      if (pct < 100) raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+    timer = setTimeout(() => showSlide(cur + 1), dur);
+  }
+
+  /* Kick off first slide */
+  restartKenBurns(slides[0]);
+  tick();
+
+  /* Optional: click/tap anywhere to advance */
+  document.addEventListener('click', () => showSlide(cur + 1));
+
+  /* Optional: keyboard arrow control */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') showSlide(cur + 1);
+    if (e.key === 'ArrowLeft')  showSlide(cur - 1);
+    if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
+  });
+})();
+</script>
+</body>
+</html>

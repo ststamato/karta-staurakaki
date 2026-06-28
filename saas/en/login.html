@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FuneralOS — Sign in</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0f1523; --gold: #c8a96e; --gold-light: #e8d5b0;
+      --white: #ffffff; --muted: #6b7a99; --border: rgba(255,255,255,.1);
+      --radius: 12px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--ink); color: var(--white);
+      min-height: 100dvh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .card {
+      width: 100%; max-width: 420px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px 32px;
+    }
+    .logo { text-align: center; margin-bottom: 6px; font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+    .logo span { color: var(--gold); }
+    .logo-sub { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+    .tabs { display: flex; gap: 4px; background: rgba(255,255,255,.06); border-radius: 10px; padding: 4px; margin-bottom: 28px; }
+    .tab { flex: 1; padding: 9px; border-radius: 8px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .15s; background: transparent; color: var(--muted); }
+    .tab.active { background: var(--gold); color: var(--ink); }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    input {
+      width: 100%; padding: 12px 14px;
+      background: rgba(255,255,255,.06); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--white); font-size: 15px;
+      outline: none; transition: border-color .15s;
+    }
+    input::placeholder { color: rgba(255,255,255,.25); }
+    input:focus { border-color: var(--gold); }
+    .btn-submit {
+      width: 100%; padding: 14px; background: var(--gold);
+      color: var(--ink); border: none; border-radius: var(--radius);
+      font-size: 15px; font-weight: 800; cursor: pointer;
+      transition: background .15s, transform .15s; margin-top: 8px;
+    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+    .msg { padding: 12px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 600; margin-bottom: 16px; display: none; }
+    .msg.error { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3); color: #fca5a5; display: block; }
+    .msg.success { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.3); color: #86efac; display: block; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .back-link { text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .back-link a { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .back-link a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">Funeral<span>OS</span></div>
+  <div class="logo-sub">Funeral home management</div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabLogin" onclick="switchTab('login')">Sign in</button>
+    <button class="tab" id="tabRegister" onclick="switchTab('register')">Sign up</button>
+  </div>
+
+  <!-- LOGIN -->
+  <div class="panel active" id="panelLogin">
+    <div class="msg" id="loginMsg"></div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="name@example.com" autocomplete="email" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn-submit" id="loginBtn" onclick="doLogin()">Sign in</button>
+  </div>
+
+  <!-- REGISTER -->
+  <div class="panel" id="panelRegister">
+    <div class="msg" id="registerMsg"></div>
+    <div class="form-group">
+      <label>Funeral home name</label>
+      <input type="text" id="regOffice" placeholder="e.g. Smith & Sons Funeral Home" />
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="name@example.com" autocomplete="email" />
+    </div>
+    <div class="form-group">
+      <label>Password (at least 6 characters)</label>
+      <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password" />
+    </div>
+    <button class="btn-submit" id="registerBtn" onclick="doRegister()">Create account</button>
+  </div>
+
+  <div class="back-link">
+    <a href="index.html">← Back to home</a>
+    <a href="../login.html">🇬🇷 Ελληνικά</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://jciaozbyvdiqfxwlgdql.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjaWFvemJ5dmRpcWZ4d2xnZHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMTE5NjQsImV4cCI6MjA4MDY4Nzk2NH0.eEBYVU1VTU3CZvaSA9fh-LLEbqRPRY9ZpK7P-17kWaA";
+
+  const { createClient } = window.supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const urlTab = new URLSearchParams(location.search).get('tab');
+  if (urlTab === 'register') switchTab('register');
+
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) window.location.href = './app.html';
+  });
+
+  function switchTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+    clearMsg('loginMsg'); clearMsg('registerMsg');
+  }
+
+  function showMsg(id, text, type) { const el = document.getElementById(id); el.textContent = text; el.className = 'msg ' + type; }
+  function clearMsg(id) { const el = document.getElementById(id); el.className = 'msg'; el.textContent = ''; }
+
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    if (!email || !password) { showMsg('loginMsg', 'Please enter your email and password.', 'error'); return; }
+
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = 'Signing in...';
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      showMsg('loginMsg', translateError(error.message), 'error');
+      btn.disabled = false; btn.textContent = 'Sign in';
+    } else {
+      window.location.href = './app.html';
+    }
+  }
+
+  async function doRegister() {
+    const office = document.getElementById('regOffice').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+
+    if (!office) { showMsg('registerMsg', 'Please enter your funeral home name.', 'error'); return; }
+    if (!email) { showMsg('registerMsg', 'Please enter your email.', 'error'); return; }
+    if (password.length < 6) { showMsg('registerMsg', 'Password must be at least 6 characters.', 'error'); return; }
+
+    const btn = document.getElementById('registerBtn');
+    btn.disabled = true; btn.textContent = 'Creating account...';
+
+    const { error } = await sb.auth.signUp({
+      email, password,
+      options: { data: { office_name: office, plan: 'free' } }
+    });
+
+    if (error) {
+      showMsg('registerMsg', translateError(error.message), 'error');
+      btn.disabled = false; btn.textContent = 'Create account';
+    } else {
+      showMsg('registerMsg', '✓ Account created! Check your email to confirm, then sign in.', 'success');
+      btn.disabled = false; btn.textContent = 'Create account';
+    }
+  }
+
+  function translateError(msg) {
+    if (!msg) return 'Something went wrong. Please try again.';
+    if (msg.includes('Invalid login')) return 'Incorrect email or password.';
+    if (msg.includes('Email not confirmed')) return 'Please confirm your email address first.';
+    if (msg.includes('already registered')) return 'This email is already registered.';
+    if (msg.includes('Password should')) return 'Password must be at least 6 characters.';
+    if (msg.includes('Unable to validate')) return 'Please enter a valid email address.';
+    return msg;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('panelLogin').classList.contains('active')) doLogin();
+    else doRegister();
+  });
+</script>
+</body>
+</html>

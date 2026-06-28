@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FuneralOS — The funeral home management platform</title>
+  <meta name="description" content="Manage ceremonies, inventory and AI assistant for funeral homes. Start free today." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0f1523; --ink2: #1e2a42; --gold: #c8a96e; --gold-light: #e8d5b0;
+      --cream: #f5f0e8; --white: #ffffff; --muted: #6b7a99;
+      --border: rgba(200,169,110,0.2); --radius: 14px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--ink); color: var(--white); line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(15,21,35,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--white); text-decoration: none; }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 12px; align-items: center; }
+    .nav-lang {
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      padding: 6px 12px; border: 1px solid rgba(255,255,255,.1); border-radius: 6px;
+    }
+    .nav-lang:hover { color: var(--white); border-color: rgba(255,255,255,.3); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none; border: none; transition: all .18s;
+    }
+    .btn-ghost { background: transparent; color: var(--gold-light); border: 1px solid var(--border); }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-primary { background: var(--gold); color: var(--ink); }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-lg { padding: 14px 32px; font-size: 16px; border-radius: 10px; }
+
+    /* HERO */
+    .hero {
+      min-height: 88vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 80px 24px 60px;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,169,110,.12) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 100px;
+      background: rgba(200,169,110,.12); border: 1px solid var(--border);
+      font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: .5px;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 900; line-height: 1.08; letter-spacing: -2px; max-width: 800px;
+    }
+    .hero h1 span { color: var(--gold); }
+    .hero-sub {
+      margin-top: 20px; font-size: clamp(16px, 2vw, 20px);
+      color: var(--muted); max-width: 540px; line-height: 1.7;
+    }
+    .hero-cta { margin-top: 40px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .hero-trust {
+      margin-top: 48px; display: flex; gap: 28px; align-items: center;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+    .trust-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+    /* SECTION */
+    .section { padding: 100px 24px; }
+    .section-inner { max-width: 1080px; margin: 0 auto; }
+    .section-label { text-align: center; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+    .section-title { text-align: center; font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -1px; margin-bottom: 56px; }
+
+    /* FEATURES */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .feat-card {
+      padding: 28px 24px;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius); transition: border-color .2s, transform .2s;
+    }
+    .feat-card:hover { border-color: var(--border); transform: translateY(-3px); }
+    .feat-icon { font-size: 32px; margin-bottom: 16px; }
+    .feat-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feat-card p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+
+    /* PROBLEM / SOLUTION */
+    .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 860px; margin: 0 auto; }
+    .pain-card {
+      padding: 28px; border-radius: var(--radius);
+    }
+    .pain-card.before { background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.15); }
+    .pain-card.after { background: rgba(200,169,110,.06); border: 1px solid rgba(200,169,110,.2); }
+    .pain-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+    .pain-card.before .pain-label { color: #f87171; }
+    .pain-card.after .pain-label { color: var(--gold); }
+    .pain-list { list-style: none; }
+    .pain-list li { font-size: 14px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; gap: 10px; }
+    .pain-list li:last-child { border-bottom: none; }
+
+    /* HOW IT WORKS */
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; }
+    .step { padding: 32px 24px; text-align: center; }
+    .step-num {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--gold); color: var(--ink); font-size: 18px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+    }
+    .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+    .step p { font-size: 14px; color: var(--muted); }
+
+    /* PRICING */
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 700px; margin: 0 auto; }
+    .price-card { padding: 36px 28px; border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); background: rgba(255,255,255,.03); position: relative; }
+    .price-card.featured { border-color: var(--gold); background: rgba(200,169,110,.06); }
+    .price-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--ink); font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 100px; letter-spacing: 1px; text-transform: uppercase; }
+    .price-name { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .price-amount { font-size: 48px; font-weight: 900; letter-spacing: -2px; line-height: 1; }
+    .price-amount small { font-size: 16px; font-weight: 500; color: var(--muted); }
+    .price-period { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .price-features { list-style: none; margin-bottom: 32px; }
+    .price-features li { font-size: 14px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; gap: 10px; }
+    .price-features li:last-child { border-bottom: none; }
+    .check { color: var(--gold); font-size: 16px; }
+    .cross { color: var(--muted); font-size: 16px; }
+    .price-cta { width: 100%; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: block; text-align: center; transition: all .18s; }
+    .price-cta-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,.2); }
+    .price-cta-ghost:hover { border-color: var(--white); }
+    .price-cta-gold { background: var(--gold); color: var(--ink); border: none; }
+    .price-cta-gold:hover { background: var(--gold-light); }
+
+    /* FAQ */
+    .faq-list { max-width: 680px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,.08); padding: 20px 0; }
+    .faq-q { font-size: 16px; font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* CTA BOTTOM */
+    .cta-bottom { padding: 100px 24px; text-align: center; background: linear-gradient(135deg, rgba(200,169,110,.08) 0%, transparent 60%); border-top: 1px solid var(--border); }
+    .cta-bottom h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 16px; }
+    .cta-bottom p { font-size: 16px; color: var(--muted); margin-bottom: 36px; }
+
+    /* FOOTER */
+    footer { padding: 32px 24px; border-top: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    footer p { font-size: 13px; color: var(--muted); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 16px; }
+      .pain-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Funeral<span>OS</span></a>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-lang">🇬🇷 Ελληνικά</a>
+    <a href="login.html?tab=login" class="btn btn-ghost">Log in</a>
+    <a href="login.html?tab=register" class="btn btn-primary">Start free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">⚱️ &nbsp; Built for funeral homes</div>
+  <h1>Run your funeral home<br><span>from one app</span></h1>
+  <p class="hero-sub">
+    Manage ceremonies, coffin inventory, supplier orders and your AI assistant —
+    all in one place. Works on mobile and desktop.
+  </p>
+  <div class="hero-cta">
+    <a href="login.html?tab=register" class="btn btn-primary btn-lg">Start free — no card needed →</a>
+    <a href="#pricing" class="btn btn-ghost btn-lg">See pricing</a>
+  </div>
+  <div class="hero-trust">
+    <div class="trust-item"><div class="trust-dot"></div>No credit card required</div>
+    <div class="trust-item"><div class="trust-dot"></div>10 ceremonies/month free</div>
+    <div class="trust-item"><div class="trust-dot"></div>Works offline too</div>
+    <div class="trust-item"><div class="trust-dot"></div>Cloud + local backup</div>
+  </div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section class="section" style="padding-top: 60px; padding-bottom: 60px;">
+  <div class="section-inner">
+    <p class="section-label">The problem</p>
+    <h2 class="section-title">Sound familiar?</h2>
+    <div class="pain-grid">
+      <div class="pain-card before">
+        <div class="pain-label">❌ Before FuneralOS</div>
+        <ul class="pain-list">
+          <li>📋 Paper checklists lost on the day</li>
+          <li>📞 Calling staff to check who's available</li>
+          <li>📦 Running out of coffins unexpectedly</li>
+          <li>📝 Forgetting ceremony details</li>
+          <li>🤷 No overview of the week ahead</li>
+          <li>🗂 Searching through old notebooks</li>
+        </ul>
+      </div>
+      <div class="pain-card after">
+        <div class="pain-label">✓ With FuneralOS</div>
+        <ul class="pain-list">
+          <li>📱 Every ceremony in a digital card</li>
+          <li>👥 Staff assignments in one tap</li>
+          <li>📦 Inventory alerts before you run out</li>
+          <li>🤖 Hermes AI flags what needs attention</li>
+          <li>📊 Weekly overview at a glance</li>
+          <li>🔍 Full history searchable instantly</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything in one system</h2>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon">⚱️</div>
+        <h3>Ceremony Cards</h3>
+        <p>Every ceremony captured in a digital card: date, location, coffin, decoration, pallbearers, pickup details. Burials and cremations supported.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📦</div>
+        <h3>Inventory Management</h3>
+        <p>Track coffins and burial sets in real time. Automatic low-stock alerts so you never run out before a ceremony.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <h3>Hermes AI Assistant</h3>
+        <p>Reads all your ceremonies, spots issues and prioritises actions for you. It observes and suggests — you decide.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <h3>Statistics</h3>
+        <p>Monthly reports by ceremony type, coffin model and location. See trends and improve how your office operates.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🚚</div>
+        <h3>Supplier Directory</h3>
+        <p>Store supplier contacts and auto-generate order messages. Copy and send — no typing the same thing twice.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">☁️</div>
+        <h3>Cloud + Offline</h3>
+        <p>Your data syncs securely to the cloud and is available on every device. Works offline when you have no signal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" style="background: rgba(255,255,255,.02); border-top: 1px solid rgba(255,255,255,.05); border-bottom: 1px solid rgba(255,255,255,.05);">
+  <div class="section-inner">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Up and running in 3 steps</h2>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Create a free account</h3>
+        <p>Sign up with your email. No credit card needed. Ready in under a minute.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Add your ceremonies</h3>
+        <p>Fill in the ceremony card. Inventory updates automatically as you go.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Let Hermes watch over things</h3>
+        <p>The AI assistant monitors your cases and alerts you to anything that needs attention.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-inner">
+    <p class="section-label">Pricing</p>
+    <h2 class="section-title">Simple and transparent</h2>
+    <div class="pricing-grid">
+
+      <!-- FREE -->
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-amount">€0</div>
+        <div class="price-period">forever</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> 10 ceremonies / month</li>
+          <li><span class="check">✓</span> Coffin & burial set inventory</li>
+          <li><span class="check">✓</span> Full ceremony card</li>
+          <li><span class="check">✓</span> Local storage</li>
+          <li><span class="cross">✗</span> <span style="color:var(--muted)">Hermes AI</span></li>
+          <li><span class="cross">✗</span> <span style="color:var(--muted)">Cloud sync</span></li>
+          <li><span class="cross">✗</span> <span style="color:var(--muted)">Statistics</span></li>
+          <li><span class="cross">✗</span> <span style="color:var(--muted)">Supplier directory</span></li>
+        </ul>
+        <a href="login.html?tab=register" class="price-cta price-cta-ghost">Start free</a>
+      </div>
+
+      <!-- PRO -->
+      <div class="price-card featured">
+        <div class="price-badge">RECOMMENDED</div>
+        <div class="price-name">Pro</div>
+        <div class="price-amount">€39 <small>/mo</small></div>
+        <div class="price-period">or €390/year — 2 months free</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Unlimited ceremonies</li>
+          <li><span class="check">✓</span> Coffin & burial set inventory</li>
+          <li><span class="check">✓</span> Full ceremony card</li>
+          <li><span class="check">✓</span> Cloud sync across devices</li>
+          <li><span class="check">✓</span> Hermes AI (Action Center)</li>
+          <li><span class="check">✓</span> Statistics & history</li>
+          <li><span class="check">✓</span> Supplier directory</li>
+          <li><span class="check">✓</span> Email support</li>
+        </ul>
+        <a href="login.html?tab=register" class="price-cta price-cta-gold">Start Pro →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" style="padding-top: 60px;">
+  <div class="section-inner">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title" style="margin-bottom: 40px;">Questions?</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Can I switch plans at any time? <span>+</span></div>
+        <div class="faq-a">Yes. Upgrade to Pro or downgrade to Free whenever you like. Your data is always kept safe.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is my data secure? <span>+</span></div>
+        <div class="faq-a">Data is stored encrypted on Supabase servers (EU). We never share your data with third parties.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Does it work without internet? <span>+</span></div>
+        <div class="faq-a">Yes. The app stores data locally on your device and syncs to the cloud when you reconnect.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is there a mobile app? <span>+</span></div>
+        <div class="faq-a">FuneralOS is a Progressive Web App (PWA) — you can install it from your browser on iOS or Android without going through an App Store.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens if I hit 10 ceremonies on the free plan? <span>+</span></div>
+        <div class="faq-a">You'll be prompted to upgrade to Pro. Your existing data is never deleted or locked.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do you support Orthodox / Greek funeral workflows? <span>+</span></div>
+        <div class="faq-a">Yes. The app was originally built for Greek Orthodox funeral offices and supports burial, cremation, 3-year plot management and more.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-bottom">
+  <h2>Start managing smarter today</h2>
+  <p>No credit card required. 10 ceremonies/month free, forever.</p>
+  <a href="login.html?tab=register" class="btn btn-primary btn-lg">Create your free account →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 FuneralOS · Funeral home management software</p>
+  <div class="footer-links">
+    <a href="login.html?tab=login">Log in</a>
+    <a href="login.html?tab=register">Sign up</a>
+    <a href="../index.html">🇬🇷 Ελληνικά</a>
+    <a href="mailto:support@funeralos.gr">Contact</a>
+  </div>
+</footer>
+
+</body>
+</html>

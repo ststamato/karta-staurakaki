@@ -93,14 +93,14 @@ const DEFAULT_OPTIONS = {
 };
 
 const DEFAULT_OPTIONS_EN = {
-  responsiblePeople: ["-", "Other"],
-  secondPeople: ["None", "Other"],
-  pickupSecondPeople: ["", "Other"],
-  suitcasePeople: ["-", "Other"],
-  decorators: ["-", "None", "Other"],
-  pallbearersOptions: ["-", "4 pallbearers", "6 pallbearers", "8 pallbearers", "10 pallbearers", "12 pallbearers", "No pallbearers", "Other"],
-  coffeeOptions: ["-", "Yes", "No", "Other"],
-  graveZones: ["", "A", "B", "C"]
+  responsiblePeople: [],
+  secondPeople: [],
+  pickupSecondPeople: [],
+  suitcasePeople: [],
+  decorators: [],
+  pallbearersOptions: [],
+  coffeeOptions: [],
+  graveZones: []
 };
 
 const OPTION_LISTS = [
@@ -171,7 +171,7 @@ let setsWarehouse = [];
 let secondHelpers = [];
 let changeLog = [];
 let pushSubs = [];
-let optionWarehouse = JSON.parse(JSON.stringify(DEFAULT_OPTIONS));
+let optionWarehouse = window.__appLang === "en" ? {} : JSON.parse(JSON.stringify(DEFAULT_OPTIONS));
 let aiSeenNotes = [];
 let aiSeenAlerts = [];
 let aiChatHistory = [];
@@ -927,12 +927,18 @@ function dedupeTextArray(arr) {
 function ensureOptionWarehouse() {
   if (!optionWarehouse || typeof optionWarehouse !== "object") optionWarehouse = {};
 
+  if (window.__appLang === "en") {
+    // EN: only preserve user-saved data — no Greek defaults injected
+    for (const key of Object.keys(DEFAULT_OPTIONS_EN)) {
+      if (!Array.isArray(optionWarehouse[key])) optionWarehouse[key] = [];
+    }
+    secondHelpers = normalizeSecondHelpersList(optionWarehouse.secondPeople || []);
+    return;
+  }
+
   const migratedSecondHelpers = normalizeSecondHelpersList(secondHelpers || []);
 
-  const isEN = window.__appLang === "en";
-  const baseDefaults = isEN ? DEFAULT_OPTIONS_EN : DEFAULT_OPTIONS;
-
-  const migration = isEN ? baseDefaults : {
+  const migration = {
     responsiblePeople: RESPONSIBLE_OPTIONS,
     secondPeople: migratedSecondHelpers.length ? migratedSecondHelpers : DEFAULT_OPTIONS.secondPeople,
     pickupSecondPeople: migratedSecondHelpers.length ? ["", ...migratedSecondHelpers.filter(x => normalizeTextKey(x) !== normalizeTextKey("Κανένας"))] : DEFAULT_OPTIONS.pickupSecondPeople,
@@ -943,12 +949,12 @@ function ensureOptionWarehouse() {
     graveZones: DEFAULT_OPTIONS.graveZones
   };
 
-  for (const key of Object.keys(baseDefaults)) {
+  for (const key of Object.keys(DEFAULT_OPTIONS)) {
     const current = Array.isArray(optionWarehouse[key]) ? optionWarehouse[key] : [];
-    optionWarehouse[key] = dedupeTextArray([...(migration[key] || []), ...baseDefaults[key], ...current]);
+    optionWarehouse[key] = dedupeTextArray([...(migration[key] || []), ...DEFAULT_OPTIONS[key], ...current]);
   }
 
-  secondHelpers = normalizeSecondHelpersList(optionWarehouse.secondPeople || baseDefaults.secondPeople);
+  secondHelpers = normalizeSecondHelpersList(optionWarehouse.secondPeople || DEFAULT_OPTIONS.secondPeople);
 }
 
 function getOptions(key) {

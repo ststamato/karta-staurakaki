@@ -2532,6 +2532,8 @@ function ensureStatsMoreContainer() {
 }
 
 function updateStats() {
+  if (window.__appLang === "en") { updateStatsEN(); return; }
+
   const totalEl = $("totalCeremonies");
   const weekEl = $("weekCeremonies");
   if (!totalEl || !weekEl) return;
@@ -2636,12 +2638,8 @@ function updateStats() {
   const addNormalizedCount = (map, rawValue) => {
     const raw = String(rawValue || "").trim().replace(/\s+/g, " ");
     if (!raw) return;
-
     const normalized = normalizeTextKey(raw);
-
-    if (!map.has(normalized)) {
-      map.set(normalized, { label: raw, count: 0 });
-    }
+    if (!map.has(normalized)) map.set(normalized, { label: raw, count: 0 });
     map.get(normalized).count += 1;
   };
 
@@ -2738,6 +2736,181 @@ function updateStats() {
       <div style="font-size:13px;">${listHtml(topN(weekdayMap, 7))}</div>
     </div>
   `;
+}
+
+// ── EN-only Statistics ────────────────────────────────────────────────────────
+function updateStatsEN() {
+  const more = $("statsMore");
+  if (!more) return;
+
+  const isPro = window.__authPlan === "pro";
+
+  const addCount = (map, rawValue) => {
+    const raw = String(rawValue || "").trim().replace(/\s+/g, " ");
+    if (!raw || raw === "-") return;
+    const key = normalizeTextKey(raw);
+    if (!map.has(key)) map.set(key, { label: raw, count: 0 });
+    map.get(key).count += 1;
+  };
+
+  const topN = (map, n = 8) =>
+    Array.from(map.values())
+      .filter(x => String(x.label || "").trim() !== "" && String(x.label || "").trim() !== "-")
+      .sort((a, b) => b.count - a.count)
+      .slice(0, n);
+
+  const rowsHtml = (arr) => arr.length
+    ? arr.map(x => `<div style="display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.04);"><span>${esc(x.label)}</span><b>${x.count}</b></div>`).join("")
+    : `<div style="color:#9ca3af;font-size:12px;">No data yet</div>`;
+
+  const card = (title, bodyHtml, accent = "#c8a96e") =>
+    `<div style="background:#1e2a42;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;margin:0 0 12px;">` +
+    `<div style="font-size:13px;font-weight:800;color:${accent};margin-bottom:10px;letter-spacing:.3px;">${title}</div>` +
+    `<div style="font-size:13px;color:#c8daf0;">${bodyHtml}</div></div>`;
+
+  const pillRow = (items) =>
+    `<div style="display:flex;flex-wrap:wrap;gap:8px;">${items.map(([label, count]) =>
+      `<div style="background:rgba(200,169,110,.15);border:1px solid rgba(200,169,110,.2);border-radius:999px;padding:5px 12px;font-size:13px;"><b>${count}</b> ${esc(label)}</div>`
+    ).join("")}</div>`;
+
+  // ── Tally loops ──────────────────────────────────────────────────────────────
+  const now = new Date();
+  const monday = getMondayOfWeek(now);
+  const sunday = new Date(monday); sunday.setDate(monday.getDate() + 7);
+  const thisMonthKey = now.toISOString().slice(0, 7);
+
+  let total = 0, thisWeek = 0, thisMonth = 0;
+  let burials = 0, cremations = 0;
+  const monthlyCounts = {};
+  const placeMap = new Map();
+  const coffinMap = new Map();
+  const coordMap = new Map();
+  const dayMap = new Map();
+  const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+  // Pro-only maps
+  const setMap = new Map();
+  const assistantMap = new Map();
+  const pallbearersMap = new Map();
+  const decorMap = new Map();
+  const luggageMap = new Map();
+  const pickupMap = new Map();
+  let coffeeYes = 0, coffeeNo = 0, coffeeOther = 0;
+
+  ceremonies.forEach((c) => {
+    total++;
+    const bt = String(c.burialType || "").trim().toLowerCase();
+    if (bt === "cremation" || bt === "αποτεφρωση") cremations++;
+    else burials++;
+
+    if (c.date) {
+      const d = new Date(c.date);
+      if (!Number.isNaN(d.getTime())) {
+        if (d >= monday && d < sunday) thisWeek++;
+        const mk = c.date.slice(0, 7);
+        if (mk === thisMonthKey) thisMonth++;
+        monthlyCounts[mk] = (monthlyCounts[mk] || 0) + 1;
+        addCount(dayMap, DAYS[d.getDay()]);
+      }
+    }
+
+    addCount(placeMap, c.place);
+    addCount(coffinMap, c.coffin);
+    addCount(coordMap, c.responsible);
+
+    if (isPro) {
+      addCount(setMap, c.set);
+      addCount(assistantMap, c.secondPerson);
+      addCount(pallbearersMap, c.pallbearers);
+      addCount(decorMap, c.decor);
+      addCount(luggageMap, c.suitcase);
+      addCount(pickupMap, c.pickupSecondPerson);
+
+      const cv = String(c.coffee || "").toLowerCase();
+      if (cv.includes("yes") || cv.includes("ναι")) coffeeYes++;
+      else if (cv.includes("no") || cv.includes("όχι") || cv.includes("oxi")) coffeeNo++;
+      else if (cv && cv !== "-") coffeeOther++;
+    }
+  });
+
+  // ── Custom fields stats ──────────────────────────────────────────────────────
+  const customStats = [];
+  if (Array.isArray(customFields) && customFields.length) {
+    customFields.forEach((f) => {
+      if (f.enabled === false) return;
+      const key = f.id || f.label;
+      if (f.type === "select" || f.type === "dropdown") {
+        const map = new Map();
+        ceremonies.forEach((c) => addCount(map, (c.customValues || {})[key]));
+        if (map.size) customStats.push(card(`📊 ${esc(f.label)}`, rowsHtml(topN(map, 10))));
+      } else if (f.type === "number") {
+        const nums = ceremonies.map(c => { const v = String((c.customValues || {})[key] || "").trim(); return v ? Number(v) : NaN; }).filter(n => !Number.isNaN(n));
+        if (nums.length) {
+          const avg = (nums.reduce((s, n) => s + n, 0) / nums.length).toFixed(1);
+          const mn = Math.min(...nums), mx = Math.max(...nums);
+          customStats.push(card(`📊 ${esc(f.label)}`,
+            `<div style="display:flex;gap:16px;flex-wrap:wrap;">` +
+            `<span>Avg <b>${avg}</b></span><span>Min <b>${mn}</b></span><span>Max <b>${mx}</b></span><span>Filled <b>${nums.length}/${total}</b></span></div>`));
+        }
+      } else if (f.type === "text") {
+        const filled = ceremonies.filter(c => String((c.customValues || {})[key] || "").trim()).length;
+        if (filled) customStats.push(card(`📊 ${esc(f.label)}`,
+          `<span>Filled in <b>${filled}</b> of <b>${total}</b> ceremonies</span>`));
+      }
+    });
+  }
+
+  // ── Monthly list ─────────────────────────────────────────────────────────────
+  const monthKeys = Object.keys(monthlyCounts).sort().reverse();
+  const monthHtml = monthKeys.length
+    ? monthKeys.map(k => `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05);"><span>${k}</span><b>${monthlyCounts[k]}</b></div>`).join("")
+    : `<div style="color:#9ca3af;font-size:12px;">No data yet</div>`;
+
+  // ── Render ───────────────────────────────────────────────────────────────────
+  let html = "";
+
+  // Overview
+  html += card("Overview",
+    pillRow([["total", total], ["this week", thisWeek], ["this month", thisMonth]]),
+    "#c8daf0");
+
+  // Burial type
+  html += card("Burial type",
+    pillRow([["Burial", burials], ["Cremation", cremations]]));
+
+  // By month
+  html += card("By month", monthHtml);
+
+  // Coffin
+  html += card("Coffin usage", rowsHtml(topN(coffinMap, 15)));
+
+  // Location
+  html += card("Top ceremony locations", rowsHtml(topN(placeMap, 10)));
+
+  // Coordinator
+  html += card("Ceremony coordinator", rowsHtml(topN(coordMap, 8)));
+
+  // Day of week
+  const orderedDays = DAYS.map(d => ({ label: d, count: (dayMap.get(normalizeTextKey(d)) || { count: 0 }).count })).filter(x => x.count > 0);
+  html += card("Day of week",
+    orderedDays.length
+      ? orderedDays.map(x => `<div style="display:flex;justify-content:space-between;gap:10px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.04);"><span>${esc(x.label)}</span><b>${x.count}</b></div>`).join("")
+      : `<div style="color:#9ca3af;font-size:12px;">No data yet</div>`);
+
+  if (isPro) {
+    html += card("Burial set usage", rowsHtml(topN(setMap, 10)));
+    html += card("2nd assistant", rowsHtml(topN(assistantMap, 8)));
+    html += card("2nd pickup person", rowsHtml(topN(pickupMap, 8)));
+    html += card("Luggage", rowsHtml(topN(luggageMap, 8)));
+    html += card("Decoration", rowsHtml(topN(decorMap, 10)));
+    html += card("Pallbearers", rowsHtml(topN(pallbearersMap, 8)));
+    html += card("Wake / Reception",
+      pillRow([["Yes", coffeeYes], ["No", coffeeNo], ["Other", coffeeOther]]));
+  }
+
+  html += customStats.join("");
+
+  more.innerHTML = html;
 }
 
 

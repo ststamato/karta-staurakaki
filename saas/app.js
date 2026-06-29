@@ -1583,6 +1583,48 @@ function moveItem(arr, fromIdx, toIdx) {
 }
 
 // ---------------- Warehouse render ----------------
+function openReceiveStockModal(type, idx) {
+  const arr = type === "coffin" ? warehouse : setsWarehouse;
+  const item = arr[idx];
+  if (!item) return;
+
+  const overlay = document.createElement("div");
+  overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99990;display:flex;align-items:center;justify-content:center;padding:20px;";
+
+  const box = document.createElement("div");
+  box.style.cssText = "background:#1e2a42;border:1px solid rgba(100,220,130,.25);border-radius:14px;padding:28px 24px;max-width:360px;width:100%;";
+  box.innerHTML = [
+    '<h3 style="font-size:15px;font-weight:800;color:#fff;margin-bottom:6px;">Receive delivery</h3>',
+    '<p style="font-size:13px;color:#6b7a99;margin-bottom:18px;">' + esc(item.name) + ' &nbsp;·&nbsp; Current stock: <b style="color:#c8daf0;">' + (item.qty ?? 0) + '</b></p>',
+    '<label style="display:block;font-size:12px;font-weight:700;color:#6b7a99;margin-bottom:4px;">Units received</label>',
+    '<input id="stockQtyInput" type="number" min="1" value="1" style="width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.12);border-radius:8px;background:#0f1523;color:#fff;font-size:16px;margin-bottom:20px;box-sizing:border-box;" />',
+    '<div style="display:flex;gap:10px;justify-content:flex-end;">',
+    '  <button id="stockCancelBtn" style="border:1px solid rgba(255,255,255,.15);background:transparent;color:#6b7a99;border-radius:8px;padding:9px 18px;font-size:13px;cursor:pointer;">Cancel</button>',
+    '  <button id="stockSaveBtn" style="border:none;background:#6dca8a;color:#0f1523;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;">+ Add to stock</button>',
+    '</div>'
+  ].join("");
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  const input = box.querySelector("#stockQtyInput");
+  overlay.addEventListener("click", function (e) { if (e.target === overlay) overlay.remove(); });
+  box.querySelector("#stockCancelBtn").addEventListener("click", function () { overlay.remove(); });
+  box.querySelector("#stockSaveBtn").addEventListener("click", function () {
+    const qty = parseInt(input.value, 10);
+    if (!qty || qty < 1) { input.focus(); return; }
+    arr[idx].qty = (arr[idx].qty ?? 0) + qty;
+    addChange(type === "coffin" ? "warehouse_restock" : "set_restock",
+      "Παραλαβή αποθέματος: " + item.name + " +" + qty);
+    saveData();
+    overlay.remove();
+    if (type === "coffin") renderWarehouse(); else renderSets();
+    renderUpdatesBadge();
+  });
+
+  setTimeout(function () { input.select(); }, 50);
+}
+
 function renderWarehouse() {
   const body = $("warehouseBody");
   if (!body) return;
@@ -1648,7 +1690,14 @@ function renderWarehouse() {
       }
     };
 
-    actionsDiv.append(upBtn, downBtn, editBtn, delBtn);
+    const stockBtn = document.createElement("button");
+    stockBtn.type = "button";
+    stockBtn.textContent = "+Stock";
+    stockBtn.title = "Receive delivery — add units";
+    stockBtn.style.cssText = "background:rgba(100,220,130,.15);color:#6dca8a;border:1px solid rgba(100,220,130,.25);";
+    stockBtn.onclick = () => openReceiveStockModal("coffin", idx);
+
+    actionsDiv.append(upBtn, downBtn, stockBtn, editBtn, delBtn);
     actionsTd.appendChild(actionsDiv);
     tr.append(nameTd, qtyTd, actionsTd);
     body.appendChild(tr);
@@ -1767,7 +1816,14 @@ function renderSets() {
       }
     };
 
-    actionsDiv.append(upBtn, downBtn, editBtn, delBtn);
+    const stockBtn = document.createElement("button");
+    stockBtn.type = "button";
+    stockBtn.textContent = "+Stock";
+    stockBtn.title = "Receive delivery — add units";
+    stockBtn.style.cssText = "background:rgba(100,220,130,.15);color:#6dca8a;border:1px solid rgba(100,220,130,.25);";
+    stockBtn.onclick = () => openReceiveStockModal("set", idx);
+
+    actionsDiv.append(upBtn, downBtn, stockBtn, editBtn, delBtn);
     actionsTd.appendChild(actionsDiv);
 
     tr.append(nameTd, qtyTd, actionsTd);

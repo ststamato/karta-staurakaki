@@ -3,7 +3,7 @@
  * Τρέχει ΠΡΙΝ το app.js.
  * 1) Auth guard: αν δεν υπάρχει session → login.html
  * 2) Αν υπάρχει session → αφαιρεί overlay, ορίζει globals, ενημερώνει UI
- * 3) Ceremony limit: free plan ≤ 10 τελετές/μήνα
+ * 3) Ceremony limit: free plan ≤ 5 τελετές/μήνα
  * 4) Hermes / AI lock για free plan
  * 5) Logout
  */
@@ -14,7 +14,7 @@
   const SUPABASE_URL = "https://jciaozbyvdiqfxwlgdql.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjaWFvemJ5dmRpcWZ4d2xnZHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMTE5NjQsImV4cCI6MjA4MDY4Nzk2NH0.eEBYVU1VTU3CZvaSA9fh-LLEbqRPRY9ZpK7P-17kWaA";
 
-  const FREE_CEREMONY_LIMIT = 10;
+  const FREE_CEREMONY_LIMIT = 5;
   // Replace with your actual Stripe Payment Link after setup
   const STRIPE_PRO_LINK = "https://buy.stripe.com/PLACEHOLDER";
 

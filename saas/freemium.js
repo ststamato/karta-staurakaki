@@ -39,7 +39,9 @@
 
       const user = session.user;
       window.__authUser = user;
-      window.__authPlan = user.user_metadata?.plan || "free";
+      const OWNER_EMAILS = ["ststamato@gmail.com"];
+      const isOwner = OWNER_EMAILS.includes(user.email);
+      window.__authPlan = isOwner ? "pro" : (user.user_metadata?.plan || "free");
       window.__authOfficeName = user.user_metadata?.office_name || user.email || "Γραφείο";
 
       applyUserUI(user);

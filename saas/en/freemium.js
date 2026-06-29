@@ -10,7 +10,7 @@
   const SUPABASE_URL = "https://jciaozbyvdiqfxwlgdql.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjaWFvemJ5dmRpcWZ4d2xnZHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMTE5NjQsImV4cCI6MjA4MDY4Nzk2NH0.eEBYVU1VTU3CZvaSA9fh-LLEbqRPRY9ZpK7P-17kWaA";
 
-  const FREE_CEREMONY_LIMIT = 10;
+  const FREE_CEREMONY_LIMIT = 5;
   const STRIPE_PRO_LINK = "https://buy.stripe.com/PLACEHOLDER";
 
   const { createClient } = window.supabase;

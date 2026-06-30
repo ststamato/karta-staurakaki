@@ -230,7 +230,14 @@
 
   // ── Feature Gates (installed after auth confirmed) ──────────────────────────
   function installFeatureGates() {
-    document.addEventListener("DOMContentLoaded", markLockedFeatures);
+    // installFeatureGates runs after async auth checks, so DOMContentLoaded
+    // has almost certainly already fired by now — call directly instead of
+    // waiting on an event that will never come.
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", markLockedFeatures);
+    } else {
+      markLockedFeatures();
+    }
 
     // Business: fully unlocked
     if (window.__authPlan === "business") return;

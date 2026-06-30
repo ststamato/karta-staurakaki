@@ -119,6 +119,14 @@
       badge.className = "plan-badge " + (plan === "business" ? "pro" : plan);
     }
 
+    // Plan tiers indicator (FREE / PRO / BUSINESS, active one highlighted green)
+    const tiers = document.getElementById("planTiers");
+    if (tiers) {
+      tiers.querySelectorAll("[data-tier]").forEach(function (t) {
+        t.classList.toggle("active", t.dataset.tier === plan);
+      });
+    }
+
     // Logout
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {

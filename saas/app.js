@@ -4101,6 +4101,7 @@ function aiBuildCloudPayload() {
     version: "v27.3",
     generatedAt: new Date().toISOString(),
     device: getDeviceLabel() || "",
+    userId: window.__authUser?.id || null,
     today,
     tomorrow,
     summary: {
@@ -4472,6 +4473,14 @@ async function aiAskQuestion() {
       signal: controller.signal
     });
     clearTimeout(timer);
+    if (res.status === 429) {
+      const limitData = await res.json().catch(() => ({}));
+      out.innerHTML = aiHtmlSection("Cloud AI", aiHtmlCard("Όριο ημερήσιων χρήσεων", `
+        <div class="ai-meta">Έχεις χρησιμοποιήσει ${limitData.used ?? AI_CLOUD_DAILY_LIMIT}/${limitData.limit ?? AI_CLOUD_DAILY_LIMIT} Cloud AI κλήσεις για σήμερα. Επαναφέρεται αύριο.</div>
+      `, "warning"));
+      aiUpdateCloudUsageBadge();
+      return;
+    }
     if (!res.ok) throw new Error(`Edge Function απάντησε ${res.status}`);
     const data = await res.json();
     aiIncrementCloudUsage();
@@ -4525,6 +4534,15 @@ async function aiRunCloud() {
 
     clearTimeout(timer);
 
+    if (res.status === 429) {
+      const limitData = await res.json().catch(() => ({}));
+      out.innerHTML = aiHtmlSection("Cloud AI", aiHtmlCard("Όριο ημερήσιων χρήσεων", `
+        <div class="ai-meta">Έχεις χρησιμοποιήσει ${limitData.used ?? AI_CLOUD_DAILY_LIMIT}/${limitData.limit ?? AI_CLOUD_DAILY_LIMIT} Cloud AI κλήσεις για σήμερα. Επαναφέρεται αύριο.</div>
+        <div class="ai-badge-row"><span class="ai-badge">Τοπικός AI διαθέσιμος</span></div>
+      `, "warning"));
+      aiUpdateCloudUsageBadge();
+      return;
+    }
     if (!res.ok) throw new Error(`Edge Function απάντησε ${res.status}`);
 
     const data = await res.json();

@@ -1,10 +1,11 @@
-// Funeral Office AI Assistant — xAI Grok
+// Funeral Office AI Assistant — xAI Grok + server-side rate limiting
 // Supabase Edge Function (Deno)
-// Env var needed: XAI_API_KEY  (from console.x.ai)
+// Env vars needed: XAI_API_KEY, SUPABASE_SERVICE_ROLE_KEY (auto: SUPABASE_URL)
 
 const XAI_API_URL = "https://api.x.ai/v1/chat/completions";
 const XAI_MODEL = "grok-3-mini";
 const MAX_TOKENS = 1200;
+const AI_DAILY_LIMIT = 10;
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -12,17 +13,15 @@ const CORS = {
 };
 
 Deno.serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: CORS });
-  }
-  if (req.method !== "POST") {
-    return new Response("Method not allowed", { status: 405, headers: CORS });
-  }
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
+  if (req.method !== "POST") return new Response("Method not allowed", { status: 405, headers: CORS });
 
   const apiKey = Deno.env.get("XAI_API_KEY");
-  if (!apiKey) {
-    return json({ error: "XAI_API_KEY not configured" }, 500);
-  }
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+  if (!apiKey) return json({ error: "XAI_API_KEY not configured" }, 500);
+  if (!serviceKey) return json({ error: "SUPABASE_SERVICE_ROLE_KEY not configured" }, 500);
 
   let payload: Record<string, unknown>;
   try {
@@ -31,6 +30,31 @@ Deno.serve(async (req: Request) => {
     return json({ error: "Invalid JSON" }, 400);
   }
 
+  const userId = payload.userId as string | null;
+  if (!userId) return json({ error: "missing user_id" }, 400);
+
+  // ── Server-side rate limit check ────────────────────────────────────────────
+  const today = new Date().toISOString().split("T")[0];
+  const sbHeaders = {
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    "Content-Type": "application/json",
+    Prefer: "resolution=merge-duplicates,return=minimal",
+  };
+
+  const usageRes = await fetch(
+    `${supabaseUrl}/rest/v1/ai_usage?user_id=eq.${encodeURIComponent(userId)}&select=calls_today,reset_date`,
+    { headers: sbHeaders }
+  );
+  const usageRows: any[] = usageRes.ok ? await usageRes.json() : [];
+  const usage = usageRows[0];
+  const callsToday = usage?.reset_date === today ? Number(usage?.calls_today ?? 0) : 0;
+
+  if (callsToday >= AI_DAILY_LIMIT) {
+    return json({ error: "daily_limit_reached", used: callsToday, limit: AI_DAILY_LIMIT }, 429);
+  }
+
+  // ── Call xAI Grok ────────────────────────────────────────────────────────────
   const isQuestion = Boolean(payload.question);
   const systemPrompt = buildSystemPrompt(payload);
   const userPrompt = isQuestion
@@ -40,10 +64,7 @@ Deno.serve(async (req: Request) => {
   try {
     const grokRes = await fetch(XAI_API_URL, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model: XAI_MODEL,
         messages: [
@@ -61,9 +82,17 @@ Deno.serve(async (req: Request) => {
       return json({ error: `Grok API error: ${grokRes.status}` }, 502);
     }
 
-    const grokData = await grokRes.json();
-    const answer = (grokData as any).choices?.[0]?.message?.content?.trim() || "Δεν υπάρχει απάντηση.";
-    return json({ answer });
+    const grokData: any = await grokRes.json();
+    const answer = grokData.choices?.[0]?.message?.content?.trim() || "Δεν υπάρχει απάντηση.";
+
+    // ── Increment counter after successful Grok call ────────────────────────
+    await fetch(`${supabaseUrl}/rest/v1/ai_usage?on_conflict=user_id`, {
+      method: "POST",
+      headers: sbHeaders,
+      body: JSON.stringify({ user_id: userId, calls_today: callsToday + 1, reset_date: today }),
+    });
+
+    return json({ answer, used: callsToday + 1, limit: AI_DAILY_LIMIT });
 
   } catch (err) {
     console.error("Edge function error:", err);
@@ -145,6 +174,6 @@ function buildSystemPrompt(payload: Record<string, unknown>): string {
     lowSets.forEach((w) => (p += `• ΣΕΤ ${w.name}: ${w.qty} τεμ.\n`));
   }
 
-  p += "\nΔώσε σύντομο briefing. Ξεκίνα με τα επείγοντα. Μην επαναλαμβάνεις δεδομένα που είναι ήδη εμφανή. Μέγιστο 350 λέξεις.";
+  p += "\nΔώσε σύντομο briefing. Ξεκίνα με τα επείγοντα. Μην επαναλαμβάνεις δεδομένα. Μέγιστο 350 λέξεις.";
   return p;
 }

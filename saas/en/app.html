@@ -188,6 +188,38 @@
         </div>
         <div id="optFieldsToggleList" class="opt-fields-toggle-list"></div>
       </div>
+      <!-- Referral panel -->
+      <div class="settings-panel" id="referralPanel">
+        <div class="settings-head">
+          <div>
+            <h3>Referral Programme</h3>
+            <p class="warehouse-hint">Refer FuneralOS to colleagues. Every time a referred user activates a Pro or Business plan, you automatically earn 1 free month.</p>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <p style="font-size:12px;color:#8899aa;margin:0 0 6px;">Your referral code:</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="referralCodeDisplay" style="flex:1;background:#0f1a2e;border:1px solid rgba(200,169,110,.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:18px;color:#c8a96e;letter-spacing:3px;font-weight:700;">---</div>
+            <button onclick="copyReferralCode()" style="background:#c8a96e;color:#0f1523;border:none;padding:10px 16px;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap;">Copy</button>
+          </div>
+          <p style="font-size:12px;color:#8899aa;margin:10px 0 6px;">Or share the link:</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="referralLinkDisplay" style="flex:1;background:#0f1a2e;border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:8px 12px;font-size:11px;color:#aabbcc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">-</div>
+            <button onclick="copyReferralLink()" style="background:rgba(200,169,110,.1);color:#c8a96e;border:1px solid rgba(200,169,110,.3);padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px;white-space:nowrap;">Copy</button>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <div style="flex:1;background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.14);border-radius:8px;padding:12px;text-align:center;">
+              <div id="referralCountDisplay" style="font-size:24px;font-weight:700;color:#c8a96e;">0</div>
+              <div style="font-size:11px;color:#8899aa;margin-top:2px;">referrals</div>
+            </div>
+            <div style="flex:1;background:rgba(200,169,110,.07);border:1px solid rgba(200,169,110,.14);border-radius:8px;padding:12px;text-align:center;">
+              <div id="referralCreditsDisplay" style="font-size:24px;font-weight:700;color:#c8a96e;">0</div>
+              <div style="font-size:11px;color:#8899aa;margin-top:2px;">free months</div>
+            </div>
+          </div>
+          <p style="margin-top:10px;font-size:11px;color:#556677;line-height:1.6;">The code is entered during the new user's registration. Once they activate a Pro or Business plan, you automatically receive 1 free month.</p>
+        </div>
+      </div>
       <div class="settings-panel">
         <div class="settings-head">
           <div>

@@ -1097,6 +1097,43 @@ function clearCeremonyOptionReferences(key, oldValue) {
 // ---------------- Demo Mode ----------------
 function loadDemoData() {
   const d = (n) => { const dt = new Date(); dt.setDate(dt.getDate() + n); return dt.toISOString().slice(0, 10); };
+
+  if (window.__appLang === "en") {
+    const base = { sheet: '', set: '', flowers: '', announcementStatus: 'Not needed', decor: '', decorNote: '', secondPerson: 'None', pickupSecondPerson: '', suitcase: '-', coffee: '', coffeePlace: '', pickup: '', pickupDate: '', coldRoom: '', cremationEscortCount: 0, cremationParishNote: '', graveNumber: '', graveZone: '', customValues: {} };
+    ceremonies = [
+      { ...base, id: 'demo_1', case_id: 'DEMO-2026-001', name: 'Johnson Michael', date: d(1), time: '10:00', place: 'St. Nicholas Cathedral', burialType: 'Ταφή', responsible: 'Thomas', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: 'Confirm cemetery booking' },
+      { ...base, id: 'demo_2', case_id: 'DEMO-2026-002', name: 'Williams Elizabeth', date: d(2), time: '11:30', place: 'Holy Trinity Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΚΩΣΤΑΚΗ ΝΕΟΝ ΛΑΚΑ', pallbearers: '8 bearers', graveType: 'Οικογενειακός', notes: 'White flowers requested' },
+      { ...base, id: 'demo_3', case_id: 'DEMO-2026-003', name: 'Davis Robert', date: d(3), time: '09:00', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 2, graveType: '', notes: 'Family arriving from abroad' },
+      { ...base, id: 'demo_4', case_id: 'DEMO-2026-004', name: 'Thompson James', date: d(5), time: '10:30', place: 'St. Mary\'s Cathedral', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΦΛΩΡΙΝΑ ΜΕΛΙ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_5', case_id: 'DEMO-2026-005', name: 'Anderson Patricia', date: d(7), time: '12:00', place: 'Christ Church', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ΑΜΠΑΖΟ ΛΕΥΚΟ', pallbearers: '', graveType: 'Οικογενειακός', notes: 'Pallbearers pending confirmation' },
+      { ...base, id: 'demo_6', case_id: 'DEMO-2026-006', name: 'Clark George', date: d(10), time: '09:30', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'ΚΟΣΜΑΣ ΓΟΡΙΛΑ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 1, graveType: '', notes: '' },
+      { ...base, id: 'demo_7', case_id: 'DEMO-2026-007', name: 'Harris Dorothy', date: d(-3), time: '10:00', place: 'St. Paul\'s Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 35ΑΡΙ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_8', case_id: 'DEMO-2026-008', name: 'Lewis Richard', date: d(-6), time: '11:00', place: 'All Saints Chapel', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ΚΩΣΤΑΚΗ ΣΚΑΦΗ ΛΑΚΑ', pallbearers: '8 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_9', case_id: 'DEMO-2026-009', name: 'Robinson Helen', date: d(-8), time: '09:00', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 3, graveType: '', notes: '' },
+      { ...base, id: 'demo_10', case_id: 'DEMO-2026-010', name: 'Walker Arthur', date: d(-12), time: '10:30', place: 'St. Nicholas Cathedral', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΦΛΩΡΙΝΑ ΚΑΡΥΔΙ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6 bearers', graveType: 'Οικογενειακός', notes: '' },
+      { ...base, id: 'demo_11', case_id: 'DEMO-2026-011', name: 'Mitchell Catherine', date: d(-15), time: '12:00', place: 'Christ Church', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ΑΜΠΑΖΟ ΜΑΥΡΟ ΛΑΚΑ', pallbearers: '4 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_12', case_id: 'DEMO-2026-012', name: 'Campbell William', date: d(-18), time: '10:00', place: 'Holy Trinity Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΚΩΣΤΑΚΗ ΑΤΛΑΣ ΜΑΤ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_13', case_id: 'DEMO-2026-013', name: 'Johnson Michael — 40-day memorial', date: d(2), time: '08:30', place: 'St. Nicholas Cathedral', burialType: 'Μνημόσυνο', responsible: 'Andrew', coffin: '', pallbearers: '', graveType: '', notes: 'Koliva provided by family' },
+      { ...base, id: 'demo_14', case_id: 'DEMO-2026-014', name: 'Williams E. — 6-month memorial', date: d(6), time: '09:00', place: 'Christ Church', burialType: 'Μνημόσυνο', responsible: 'Christine', coffin: '', pallbearers: '', graveType: '', notes: '' },
+      { ...base, id: 'demo_15', case_id: 'DEMO-2026-015', name: 'Davis R. — 40-day memorial', date: d(-3), time: '10:30', place: 'Holy Trinity Church', burialType: 'Μνημόσυνο', responsible: 'Thomas', coffin: '', pallbearers: '', graveType: '', notes: '' },
+      { ...base, id: 'demo_16', case_id: 'DEMO-2026-016', name: 'Harris D. — annual memorial', date: d(-7), time: '08:30', place: 'All Saints Chapel', burialType: 'Μνημόσυνο', responsible: 'Andrew', coffin: '', pallbearers: '', graveType: '', notes: '' },
+      { ...base, id: 'demo_17', case_id: 'DEMO-2026-017', name: 'Lewis R. — 40-day memorial', date: d(-20), time: '09:00', place: 'St. Nicholas Cathedral', burialType: 'Μνημόσυνο', responsible: 'Christine', coffin: '', pallbearers: '', graveType: '', notes: '' },
+    ];
+    warehouse = [
+      { name: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', qty: 4 }, { name: 'ΦΛΩΡΙΝΑ ΜΕΛΙ ΛΑΚΑ 40ΑΡΙ', qty: 3 },
+      { name: 'ΦΛΩΡΙΝΑ ΚΑΡΥΔΙ ΛΑΚΑ 40ΑΡΙ', qty: 3 }, { name: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 35ΑΡΙ', qty: 4 },
+      { name: 'ΚΩΣΤΑΚΗ ΝΕΟΝ ΛΑΚΑ', qty: 2 }, { name: 'ΚΩΣΤΑΚΗ ΣΚΑΦΗ ΛΑΚΑ', qty: 3 },
+      { name: 'ΚΩΣΤΑΚΗ ΑΤΛΑΣ ΜΑΤ', qty: 3 }, { name: 'ΑΜΠΑΖΟ ΜΑΥΡΟ ΛΑΚΑ', qty: 3 },
+      { name: 'ΑΜΠΑΖΟ ΛΕΥΚΟ', qty: 2 }, { name: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', qty: 3 },
+    ];
+    setsWarehouse = [{ name: 'GREY', qty: 8 }, { name: 'WHITE', qty: 6 }, { name: 'BEIGE', qty: 5 }];
+    customLists = [{ id: 'demo_cl_1', name: 'Staff', items: ['Thomas', 'Andrew', 'Christine', 'Mary'] }];
+    secondHelpers = ['None', 'Thomas', 'Andrew', 'Christine'];
+    changeLog = [];
+    optionWarehouse = {};
+    return;
+  }
+
   const base = { sheet: '', set: '', flowers: '', announcementStatus: 'Δεν χρειάζεται', decor: '', decorNote: '', secondPerson: 'Κανένας', pickupSecondPerson: '', suitcase: '-', coffee: '', coffeePlace: '', pickup: '', pickupDate: '', coldRoom: '', cremationEscortCount: 0, cremationParishNote: '', graveNumber: '', graveZone: '', customValues: {} };
   ceremonies = [
     { ...base, id: 'demo_1', case_id: 'DEMO-2026-001', name: 'Παπαδόπουλος Γεώργιος', date: d(1), time: '10:00', place: 'Ι.Ν. Αγ. Νικολάου Κηφισιάς', burialType: 'Ταφή', responsible: 'Θανάσης', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6άδα', graveType: 'Τριετία', notes: 'Να επιβεβαιωθεί το νεκροταφείο' },
@@ -5157,13 +5194,8 @@ function renderCeremonyCard(c, now) {
   const editBtn = document.createElement("button"); editBtn.className = "edit"; editBtn.textContent = t("Επεξεργασία", "Edit"); editBtn.dataset.action = "edit";
   const waBtn = document.createElement("button"); waBtn.type = "button"; waBtn.dataset.action = "wa"; waBtn.title = "WhatsApp"; waBtn.style.cssText = "width:36px;height:36px;border-radius:999px;border:none;display:inline-flex;align-items:center;justify-content:center;background:#25d366;cursor:pointer;color:#fff;font-weight:900;"; waBtn.textContent = "WA";
   const shareBtn = document.createElement("button"); shareBtn.type = "button"; shareBtn.textContent = "Share"; shareBtn.dataset.action = "share"; shareBtn.style.cssText = "border-radius:999px;border:none;padding:6px 14px;font-size:13px;cursor:pointer;background:#e5e7eb;";
-  const bridgeWreathsBtn = document.createElement("button"); bridgeWreathsBtn.type = "button"; bridgeWreathsBtn.textContent = "Στεφάνια"; bridgeWreathsBtn.dataset.action = "bridge-wreaths"; bridgeWreathsBtn.title = "Άνοιγμα εφαρμογής Στεφάνια με τα στοιχεία της υπόθεσης"; bridgeWreathsBtn.style.cssText = "border-radius:999px;border:none;padding:6px 12px;font-size:13px;cursor:pointer;background:#fef3c7;color:#92400e;font-weight:800;";
-  const bridgeMemorialsBtn = document.createElement("button"); bridgeMemorialsBtn.type = "button"; bridgeMemorialsBtn.textContent = "Μνημόσυνα"; bridgeMemorialsBtn.dataset.action = "bridge-memorials"; bridgeMemorialsBtn.title = "Άνοιγμα εφαρμογής Μνημόσυνα με τα στοιχεία της υπόθεσης"; bridgeMemorialsBtn.style.cssText = "border-radius:999px;border:none;padding:6px 12px;font-size:13px;cursor:pointer;background:#eef2ff;color:#3730a3;font-weight:800;";
-  const bridgeAnnouncementsBtn = document.createElement("button"); bridgeAnnouncementsBtn.type = "button"; bridgeAnnouncementsBtn.textContent = "Αγγελτήριο"; bridgeAnnouncementsBtn.dataset.action = "bridge-announcements"; bridgeAnnouncementsBtn.title = "Άνοιγμα εφαρμογής Αγγελτήριο με τα στοιχεία της υπόθεσης"; bridgeAnnouncementsBtn.style.cssText = "border-radius:999px;border:none;padding:6px 12px;font-size:13px;cursor:pointer;background:#ecfeff;color:#155e75;font-weight:800;";
-  const bridgeOrdersBtn = document.createElement("button"); bridgeOrdersBtn.type = "button"; bridgeOrdersBtn.textContent = "Orders"; bridgeOrdersBtn.dataset.action = "bridge-orders"; bridgeOrdersBtn.title = "Άνοιγμα εφαρμογής Orders με τα στοιχεία της υπόθεσης"; bridgeOrdersBtn.style.cssText = "border-radius:999px;border:none;padding:6px 12px;font-size:13px;cursor:pointer;background:#f0fdf4;color:#166534;font-weight:800;";
-  const bridgeCopyBtn = document.createElement("button"); bridgeCopyBtn.type = "button"; bridgeCopyBtn.textContent = "Case"; bridgeCopyBtn.dataset.action = "bridge-copy"; bridgeCopyBtn.title = "Αντιγραφή στοιχείων υπόθεσης"; bridgeCopyBtn.style.cssText = "border-radius:999px;border:none;padding:6px 12px;font-size:13px;cursor:pointer;background:#ede9fe;color:#5b21b6;font-weight:800;";
   const delBtn = document.createElement("button"); delBtn.className = "delete"; delBtn.textContent = t("Διαγραφή", "Delete"); delBtn.dataset.action = "delete";
-  buttons.append(editBtn, waBtn, shareBtn, bridgeWreathsBtn, bridgeMemorialsBtn, bridgeAnnouncementsBtn, bridgeOrdersBtn, bridgeCopyBtn, delBtn);
+  buttons.append(editBtn, waBtn, shareBtn, delBtn);
   if (cardAiWarning.className) card.append(header, place, caseBadge, cardAiWarning, rows, buttons); else card.append(header, place, caseBadge, rows, buttons);
   return card;
 }

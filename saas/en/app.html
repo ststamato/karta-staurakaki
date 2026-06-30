@@ -153,42 +153,14 @@
         <div id="suppliersList"></div>
       </div>
       <div class="warehouse-section options-warehouse">
-        <h3>Options Inventory</h3>
-        <p class="warehouse-hint">Manage all dropdown lists — add, edit, delete and reorder.</p>
-        <div class="option-grid">
-          <section class="option-box">
-            <div class="option-head"><h4>Ceremony coordinator</h4><button type="button" class="add-option-btn" data-list="responsiblePeople">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="responsiblePeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>2nd assistant</h4><button type="button" class="add-option-btn" data-list="secondPeople">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="secondPeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>2nd pickup person</h4><button type="button" class="add-option-btn" data-list="pickupSecondPeople">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="pickupSecondPeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Luggage</h4><button type="button" class="add-option-btn" data-list="suitcasePeople">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="suitcasePeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Decoration</h4><button type="button" class="add-option-btn" data-list="decorators">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="decoratorsBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Pallbearers</h4><button type="button" class="add-option-btn" data-list="pallbearersOptions">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="pallbearersOptionsBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Wake / reception</h4><button type="button" class="add-option-btn" data-list="coffeeOptions">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="coffeeOptionsBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Grave zones</h4><button type="button" class="add-option-btn" data-list="graveZones">+ Add</button></div>
-            <table class="warehouse-table compact-table"><tbody id="graveZonesBody"></tbody></table>
-          </section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <h3>Custom lists</h3>
+            <p class="warehouse-hint">Create your own lists — items appear as dropdown options in the ceremony form.</p>
+          </div>
+          <button type="button" id="addCustomListBtn" class="add-option-btn">+ New list</button>
         </div>
+        <div id="customListsContainer"></div>
       </div>
     </section>
 

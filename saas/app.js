@@ -176,6 +176,7 @@ let aiSeenNotes = [];
 let aiSeenAlerts = [];
 let aiChatHistory = [];
 let customFields = [];
+let customLists = [];
 
 // ---------------- LocalStorage Keys ----------------
 const CEREMONIES_KEY = "staurakaki_ceremonies_v8";
@@ -191,6 +192,7 @@ const AI_SEEN_NOTES_KEY = "staurakaki_ai_seen_notes_v1";
 const AI_SEEN_ALERTS_KEY = "staurakaki_ai_seen_alerts_v1";
 const AI_CHAT_HISTORY_KEY = "staurakaki_ai_chat_history_v1";
 const CUSTOM_FIELDS_KEY = "staurakaki_custom_fields_v36";
+const CUSTOM_LISTS_KEY = "staurakaki_custom_lists_v1";
 const OFFICE_EVENTS_LOCAL_KEY = "staurakaki_office_events_v1";
 const OFFICE_DNA_LOCAL_KEY = "staurakaki_office_dna_v1";
 
@@ -863,6 +865,7 @@ async function cloudLoadData() {
     if (Array.isArray(p.aiSeenAlerts)) aiSeenAlerts = p.aiSeenAlerts;
     if (Array.isArray(p.aiChatHistory)) aiChatHistory = p.aiChatHistory;
     if (Array.isArray(p.customFields)) customFields = p.customFields;
+    if (Array.isArray(p.customLists)) customLists = p.customLists;
   }
 }
 
@@ -870,7 +873,7 @@ async function cloudSaveAll() {
   const base = `${SUPABASE_URL}/rest/v1`;
   const session = await getCloudSession();
   if (!session) { console.error("No authenticated user for cloud save"); return; }
-  const payload = { ceremonies, warehouse, setsWarehouse, secondHelpers, optionWarehouse, changeLog, pushSubs, aiSeenNotes, aiSeenAlerts, aiChatHistory, customFields };
+  const payload = { ceremonies, warehouse, setsWarehouse, secondHelpers, optionWarehouse, changeLog, pushSubs, aiSeenNotes, aiSeenAlerts, aiChatHistory, customFields, customLists };
   try {
     await fetch(`${base}/app_state`, {
       method: "POST",
@@ -957,6 +960,46 @@ function ensureOptionWarehouse() {
   secondHelpers = normalizeSecondHelpersList(optionWarehouse.secondPeople || DEFAULT_OPTIONS.secondPeople);
 }
 
+function migrateOptionWarehouseToCustomLists() {
+  if (Array.isArray(customLists) && customLists.length > 0) return;
+  if (!Array.isArray(customLists)) customLists = [];
+  const OW = optionWarehouse || {};
+  const entries = [
+    [t("Υπεύθυνος τελετής", "Ceremony coordinator"), OW.responsiblePeople],
+    [t("2ο άτομο βοήθειας", "2nd assistant"), OW.secondPeople],
+    [t("2ο άτομο παραλαβής", "2nd pickup person"), OW.pickupSecondPeople],
+    [t("Βαλίτσα", "Luggage"), OW.suitcasePeople],
+    [t("Στολισμός", "Decoration"), OW.decorators],
+    [t("Φραγκοφόροι", "Pallbearers"), OW.pallbearersOptions],
+    [t("Καφές", "Wake / reception"), OW.coffeeOptions],
+    [t("Ζώνες τριετίας", "Grave zones"), OW.graveZones]
+  ];
+  let any = false;
+  entries.forEach(([name, arr], idx) => {
+    const items = (Array.isArray(arr) ? arr : []).filter(x => x !== "" && x !== "-" && x !== "Κανένας" && x !== "None");
+    if (items.length > 0) {
+      customLists.push({ id: "cl_migrated_" + idx, name, items });
+      any = true;
+    }
+  });
+  if (any) saveData();
+}
+
+function getAllCustomListItems() {
+  const seen = new Set();
+  const out = [];
+  (customLists || []).forEach(list => {
+    (list.items || []).forEach(item => {
+      const key = normalizeTextKey(item);
+      if (key && !seen.has(key)) {
+        seen.add(key);
+        out.push(item);
+      }
+    });
+  });
+  return out;
+}
+
 function getOptions(key) {
   ensureOptionWarehouse();
   return optionWarehouse[key] || [];
@@ -1021,7 +1064,7 @@ function moveOption(key, fromIdx, toIdx) {
   if (key === "secondPeople") secondHelpers = normalizeSecondHelpersList(arr);
   addChange("option_reorder", `Αλλαγή σειράς: ${optionLabelForPrompt(key)}`);
   saveData();
-  renderOptionWarehouse();
+  renderCustomLists();
 }
 
 function updateCeremonyOptionReferences(key, oldValue, newValue) {
@@ -1068,6 +1111,7 @@ async function loadData() {
       localStorage.setItem(AI_CHAT_HISTORY_KEY, JSON.stringify(aiChatHistory || []));
   localStorage.setItem(CUSTOM_FIELDS_KEY, JSON.stringify(customFields || []));
       localStorage.setItem(CUSTOM_FIELDS_KEY, JSON.stringify(customFields || []));
+      localStorage.setItem(CUSTOM_LISTS_KEY, JSON.stringify(customLists || []));
     } catch (e) {
       console.error("Cloud load error, falling back to local", e);
       try { ceremonies = JSON.parse(localStorage.getItem(CEREMONIES_KEY)) || []; } catch { ceremonies = []; }
@@ -1083,6 +1127,7 @@ async function loadData() {
       try { customFields = JSON.parse(localStorage.getItem(CUSTOM_FIELDS_KEY)) || []; } catch { customFields = []; }
       try { aiChatHistory = JSON.parse(localStorage.getItem(AI_CHAT_HISTORY_KEY)) || []; } catch { aiChatHistory = []; }
       try { customFields = JSON.parse(localStorage.getItem(CUSTOM_FIELDS_KEY)) || []; } catch { customFields = []; }
+      try { customLists = JSON.parse(localStorage.getItem(CUSTOM_LISTS_KEY)) || []; } catch { customLists = []; }
     }
   } else {
     try { ceremonies = JSON.parse(localStorage.getItem(CEREMONIES_KEY)) || []; } catch { ceremonies = []; }
@@ -1095,6 +1140,7 @@ async function loadData() {
     try { aiSeenNotes = JSON.parse(localStorage.getItem(AI_SEEN_NOTES_KEY)) || []; } catch { aiSeenNotes = []; }
     try { aiSeenAlerts = JSON.parse(localStorage.getItem(AI_SEEN_ALERTS_KEY)) || []; } catch { aiSeenAlerts = []; }
     try { customFields = JSON.parse(localStorage.getItem(CUSTOM_FIELDS_KEY)) || []; } catch { customFields = []; }
+    try { customLists = JSON.parse(localStorage.getItem(CUSTOM_LISTS_KEY)) || []; } catch { customLists = []; }
   }
 
   ceremonies = (ceremonies || []).map((c) => ({
@@ -1142,6 +1188,7 @@ async function loadData() {
   secondHelpers = normalizeSecondHelpersList(secondHelpers);
 
   ensureOptionWarehouse();
+  migrateOptionWarehouseToCustomLists();
 
   if (!Array.isArray(changeLog)) changeLog = [];
   if (!Array.isArray(pushSubs)) pushSubs = [];
@@ -1161,6 +1208,7 @@ async function saveData() {
   localStorage.setItem(AI_SEEN_ALERTS_KEY, JSON.stringify(aiSeenAlerts || []));
   localStorage.setItem(AI_CHAT_HISTORY_KEY, JSON.stringify(aiChatHistory || []));
   localStorage.setItem(CUSTOM_FIELDS_KEY, JSON.stringify(customFields || []));
+  localStorage.setItem(CUSTOM_LISTS_KEY, JSON.stringify(customLists || []));
   if (USE_CLOUD) cloudSaveAll().catch((e) => console.error("Cloud save error (ignored)", e));
 }
 
@@ -1913,49 +1961,176 @@ function renderSecondHelpers() {
 }
 
 
-function renderOptionWarehouse() {
-  ensureOptionWarehouse();
-  OPTION_LISTS.forEach(({ key, bodyId }) => {
-    const body = $(bodyId);
-    if (!body) return;
-    body.innerHTML = "";
-    getOptions(key).forEach((name, idx) => {
+function renderCustomLists() {
+  const container = $("customListsContainer");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (!Array.isArray(customLists) || customLists.length === 0) {
+    container.innerHTML = `<p style="color:#8899aa;font-size:13px;margin:16px 0;">${t("Δεν υπάρχουν λίστες ακόμα. Πάτησε «+ Νέα λίστα» για να ξεκινήσεις.", "No lists yet. Press «+ New list» to get started.")}</p>`;
+    return;
+  }
+
+  const grid = document.createElement("div");
+  grid.className = "option-grid";
+
+  customLists.forEach((list, listIdx) => {
+    const box = document.createElement("section");
+    box.className = "option-box";
+
+    const head = document.createElement("div");
+    head.className = "option-head";
+
+    const title = document.createElement("h4");
+    title.textContent = list.name;
+    title.style.flex = "1";
+
+    const renameBtn = document.createElement("button");
+    renameBtn.type = "button";
+    renameBtn.className = "edit";
+    renameBtn.textContent = "✎";
+    renameBtn.title = t("Μετονομασία", "Rename");
+    renameBtn.style.cssText = "font-size:11px;padding:2px 7px;";
+    renameBtn.onclick = () => renameCustomList(listIdx);
+
+    const delListBtn = document.createElement("button");
+    delListBtn.type = "button";
+    delListBtn.className = "delete";
+    delListBtn.textContent = "×";
+    delListBtn.title = t("Διαγραφή λίστας", "Delete list");
+    delListBtn.style.cssText = "font-size:14px;padding:2px 7px;";
+    delListBtn.onclick = () => deleteCustomList(listIdx);
+
+    head.append(title, renameBtn, delListBtn);
+    box.appendChild(head);
+
+    const table = document.createElement("table");
+    table.className = "warehouse-table compact-table";
+    const tbody = document.createElement("tbody");
+
+    (list.items || []).forEach((item, itemIdx) => {
       const tr = document.createElement("tr");
       const nameTd = document.createElement("td");
-      nameTd.textContent = name === "" ? "-" : name;
-
+      nameTd.textContent = item;
       const actionsTd = document.createElement("td");
-      const actionsDiv = document.createElement("div");
-      actionsDiv.className = "warehouse-actions";
-
-      const upBtn = document.createElement("button");
-      upBtn.type = "button";
-      upBtn.textContent = "↑";
-      upBtn.onclick = () => moveOption(key, idx, idx - 1);
-
-      const downBtn = document.createElement("button");
-      downBtn.type = "button";
-      downBtn.textContent = "↓";
-      downBtn.onclick = () => moveOption(key, idx, idx + 1);
-
+      const div = document.createElement("div");
+      div.className = "warehouse-actions";
       const editBtn = document.createElement("button");
       editBtn.type = "button";
       editBtn.className = "edit";
       editBtn.textContent = t("Επεξεργασία", "Edit");
-      editBtn.onclick = () => editOption(key, idx);
-
+      editBtn.onclick = () => editCustomListItem(listIdx, itemIdx);
       const delBtn = document.createElement("button");
       delBtn.type = "button";
       delBtn.className = "delete";
       delBtn.textContent = "×";
-      delBtn.onclick = () => deleteOption(key, idx);
-
-      actionsDiv.append(upBtn, downBtn, editBtn, delBtn);
-      actionsTd.appendChild(actionsDiv);
+      delBtn.onclick = () => deleteCustomListItem(listIdx, itemIdx);
+      div.append(editBtn, delBtn);
+      actionsTd.appendChild(div);
       tr.append(nameTd, actionsTd);
-      body.appendChild(tr);
+      tbody.appendChild(tr);
     });
+
+    table.appendChild(tbody);
+    box.appendChild(table);
+
+    const addRow = document.createElement("div");
+    addRow.style.cssText = "display:flex;gap:6px;margin-top:8px;";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.placeholder = t("Νέο στοιχείο...", "New item...");
+    input.style.cssText = "flex:1;padding:5px 8px;background:#1a2640;border:1px solid #2a3a50;color:#c8daf0;border-radius:6px;font-size:12px;";
+    const addBtn = document.createElement("button");
+    addBtn.type = "button";
+    addBtn.className = "add-option-btn";
+    addBtn.textContent = "+";
+    addBtn.style.cssText = "padding:5px 12px;font-size:14px;line-height:1;";
+    addBtn.onclick = () => {
+      const v = input.value.trim();
+      if (!v) return;
+      addCustomListItem(listIdx, v);
+      input.value = "";
+    };
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); addBtn.click(); }
+    });
+    addRow.append(input, addBtn);
+    box.appendChild(addRow);
+
+    grid.appendChild(box);
   });
+
+  container.appendChild(grid);
+}
+
+function openNewCustomListModal() {
+  const name = window.prompt(t("Όνομα νέας λίστας:", "New list name:"), "");
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed) return;
+  if (!Array.isArray(customLists)) customLists = [];
+  customLists.push({ id: "cl_" + nowTs(), name: trimmed, items: [] });
+  saveData();
+  renderCustomLists();
+  fillDynamicDropdowns({});
+}
+
+function renameCustomList(idx) {
+  const list = customLists[idx];
+  if (!list) return;
+  const name = window.prompt(t("Νέο όνομα λίστας:", "New list name:"), list.name);
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed) return;
+  customLists[idx].name = trimmed;
+  saveData();
+  renderCustomLists();
+}
+
+function deleteCustomList(idx) {
+  const list = customLists[idx];
+  if (!list) return;
+  if (!window.confirm(t(`Διαγραφή λίστας «${list.name}»;`, `Delete list "${list.name}"?`))) return;
+  customLists.splice(idx, 1);
+  saveData();
+  renderCustomLists();
+  fillDynamicDropdowns({});
+}
+
+function addCustomListItem(listIdx, value) {
+  const list = customLists[listIdx];
+  if (!list) return;
+  const trimmed = String(value).trim();
+  if (!trimmed) return;
+  if (!Array.isArray(list.items)) list.items = [];
+  list.items.push(trimmed);
+  saveBackup("addCustomListItem");
+  saveData();
+  renderCustomLists();
+  fillDynamicDropdowns({});
+}
+
+function editCustomListItem(listIdx, itemIdx) {
+  const list = customLists[listIdx];
+  if (!list) return;
+  const oldVal = list.items[itemIdx];
+  const newVal = window.prompt(t("Επεξεργασία:", "Edit:"), oldVal);
+  if (newVal === null) return;
+  const trimmed = newVal.trim();
+  if (!trimmed) return;
+  list.items[itemIdx] = trimmed;
+  saveData();
+  renderCustomLists();
+  fillDynamicDropdowns({});
+}
+
+function deleteCustomListItem(listIdx, itemIdx) {
+  const list = customLists[listIdx];
+  if (!list) return;
+  list.items.splice(itemIdx, 1);
+  saveData();
+  renderCustomLists();
+  fillDynamicDropdowns({});
 }
 
 // ---------------- Warehouse / Set / Helper modals ----------------
@@ -3100,7 +3275,7 @@ function renderAll() {
   renderWarehouse();
   renderSets();
   renderSecondHelpers();
-  renderOptionWarehouse();
+  renderCustomLists();
   renderCustomFieldsSettings();
   renderHistory();
   try { renderHermesDashboard(); } catch (e) { console.warn("Hermes render skipped", e); }
@@ -4397,16 +4572,17 @@ function bindAIAssistantActions() {
 }
 
 
-// ---------------- Dropdowns από Αποθήκη Επιλογών ----------------
+// ---------------- Dropdowns από Προσαρμοσμένες Λίστες ----------------
 function fillDynamicDropdowns(c = {}) {
-  fillSelect($("responsiblePerson"), getOptions("responsiblePeople"), c.responsible ?? "-");
-  fillSelect($("secondPerson"), getOptions("secondPeople"), c.secondPerson ?? "Κανένας");
-  fillSelect($("pickupSecondPerson"), getOptions("pickupSecondPeople"), c.pickupSecondPerson ?? "");
-  fillSelect($("suitcase"), getOptions("suitcasePeople"), c.suitcase ?? "-");
-  fillSelect($("ceremonyDecor"), getOptions("decorators"), c.decor ?? "");
-  fillSelect($("ceremonyPallbearers"), getOptions("pallbearersOptions"), c.pallbearers ?? "");
-  fillSelect($("ceremonyCoffee"), getOptions("coffeeOptions"), c.coffee ?? "");
-  fillSelect($("ceremonyGraveZone"), getOptions("graveZones"), c.graveZone ?? "");
+  const items = getAllCustomListItems();
+  fillSelect($("responsiblePerson"), ["-", ...items], c.responsible ?? "-");
+  fillSelect($("secondPerson"), [t("Κανένας", "None"), ...items], c.secondPerson ?? t("Κανένας", "None"));
+  fillSelect($("pickupSecondPerson"), ["", ...items], c.pickupSecondPerson ?? "");
+  fillSelect($("suitcase"), ["-", ...items], c.suitcase ?? "-");
+  fillSelect($("ceremonyDecor"), ["", ...items], c.decor ?? "");
+  fillSelect($("ceremonyPallbearers"), ["", ...items], c.pallbearers ?? "");
+  fillSelect($("ceremonyCoffee"), ["", ...items], c.coffee ?? "");
+  fillSelect($("ceremonyGraveZone"), ["", ...items], c.graveZone ?? "");
 }
 
 // Override: κρατάμε τη φόρμα ίδια, αλλά γεμίζει όλα τα dropdowns από Αποθήκη Επιλογών.
@@ -4506,12 +4682,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     bindAIAssistantActions();
     aiEnsureChatHistoryUI();
 
-    document.querySelectorAll(".add-option-btn").forEach(btn => {
-      if (btn.dataset.bound !== "1") {
-        btn.dataset.bound = "1";
-        btn.addEventListener("click", () => addOption(btn.dataset.list));
-      }
-    });
+    if ($("addCustomListBtn")) $("addCustomListBtn").onclick = openNewCustomListModal;
 
     if ($("newCeremonyBtn")) $("newCeremonyBtn").onclick = () => openCeremonyModal(null);
     if ($("addCustomFieldBtn")) $("addCustomFieldBtn").onclick = () => openCustomFieldModal(null);

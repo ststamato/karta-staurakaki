@@ -202,42 +202,14 @@
         <p class="warehouse-hint">Ειδοποίηση παραγγελίας: κάτω από 5 τεμ. (μόνο ΓΚΡΙ & ΛΕΥΚΟ)</p>
       </div>
       <div class="warehouse-section options-warehouse">
-        <h3>Αποθήκη Επιλογών</h3>
-        <p class="warehouse-hint">Ξεχωριστή αποθήκη για όλα τα dropdowns.</p>
-        <div class="option-grid">
-          <section class="option-box">
-            <div class="option-head"><h4>Υπεύθυνος τελετής</h4><button type="button" class="add-option-btn" data-list="responsiblePeople">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="responsiblePeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>2ο άτομο βοήθειας</h4><button type="button" class="add-option-btn" data-list="secondPeople">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="secondPeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>2ο άτομο παραλαβής</h4><button type="button" class="add-option-btn" data-list="pickupSecondPeople">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="pickupSecondPeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Βαλίτσα</h4><button type="button" class="add-option-btn" data-list="suitcasePeople">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="suitcasePeopleBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Στολισμός</h4><button type="button" class="add-option-btn" data-list="decorators">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="decoratorsBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Φραγκοφόροι</h4><button type="button" class="add-option-btn" data-list="pallbearersOptions">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="pallbearersOptionsBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Καφές</h4><button type="button" class="add-option-btn" data-list="coffeeOptions">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="coffeeOptionsBody"></tbody></table>
-          </section>
-          <section class="option-box">
-            <div class="option-head"><h4>Ζώνες τριετίας</h4><button type="button" class="add-option-btn" data-list="graveZones">+ Προσθήκη</button></div>
-            <table class="warehouse-table compact-table"><tbody id="graveZonesBody"></tbody></table>
-          </section>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <h3>Λίστες επιλογών</h3>
+            <p class="warehouse-hint">Δημιούργησε δικές σου λίστες · τα στοιχεία τους εμφανίζονται ως επιλογές στη φόρμα τελετής.</p>
+          </div>
+          <button type="button" id="addCustomListBtn" class="add-option-btn">+ Νέα λίστα</button>
         </div>
+        <div id="customListsContainer"></div>
       </div>
     </section>
 

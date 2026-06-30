@@ -1101,18 +1101,18 @@ function loadDemoData() {
   if (window.__appLang === "en") {
     const base = { sheet: '', set: '', flowers: '', announcementStatus: 'Not needed', decor: '', decorNote: '', secondPerson: 'None', pickupSecondPerson: '', suitcase: '-', coffee: '', coffeePlace: '', pickup: '', pickupDate: '', coldRoom: '', cremationEscortCount: 0, cremationParishNote: '', graveNumber: '', graveZone: '', customValues: {} };
     ceremonies = [
-      { ...base, id: 'demo_1', case_id: 'DEMO-2026-001', name: 'Johnson Michael', date: d(1), time: '10:00', place: 'St. Nicholas Cathedral', burialType: 'Ταφή', responsible: 'Thomas', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: 'Confirm cemetery booking' },
-      { ...base, id: 'demo_2', case_id: 'DEMO-2026-002', name: 'Williams Elizabeth', date: d(2), time: '11:30', place: 'Holy Trinity Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΚΩΣΤΑΚΗ ΝΕΟΝ ΛΑΚΑ', pallbearers: '8 bearers', graveType: 'Οικογενειακός', notes: 'White flowers requested' },
-      { ...base, id: 'demo_3', case_id: 'DEMO-2026-003', name: 'Davis Robert', date: d(3), time: '09:00', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 2, graveType: '', notes: 'Family arriving from abroad' },
-      { ...base, id: 'demo_4', case_id: 'DEMO-2026-004', name: 'Thompson James', date: d(5), time: '10:30', place: 'St. Mary\'s Cathedral', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΦΛΩΡΙΝΑ ΜΕΛΙ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
-      { ...base, id: 'demo_5', case_id: 'DEMO-2026-005', name: 'Anderson Patricia', date: d(7), time: '12:00', place: 'Christ Church', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ΑΜΠΑΖΟ ΛΕΥΚΟ', pallbearers: '', graveType: 'Οικογενειακός', notes: 'Pallbearers pending confirmation' },
-      { ...base, id: 'demo_6', case_id: 'DEMO-2026-006', name: 'Clark George', date: d(10), time: '09:30', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'ΚΟΣΜΑΣ ΓΟΡΙΛΑ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 1, graveType: '', notes: '' },
-      { ...base, id: 'demo_7', case_id: 'DEMO-2026-007', name: 'Harris Dorothy', date: d(-3), time: '10:00', place: 'St. Paul\'s Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 35ΑΡΙ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
-      { ...base, id: 'demo_8', case_id: 'DEMO-2026-008', name: 'Lewis Richard', date: d(-6), time: '11:00', place: 'All Saints Chapel', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ΚΩΣΤΑΚΗ ΣΚΑΦΗ ΛΑΚΑ', pallbearers: '8 bearers', graveType: 'Τριετία', notes: '' },
-      { ...base, id: 'demo_9', case_id: 'DEMO-2026-009', name: 'Robinson Helen', date: d(-8), time: '09:00', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 3, graveType: '', notes: '' },
-      { ...base, id: 'demo_10', case_id: 'DEMO-2026-010', name: 'Walker Arthur', date: d(-12), time: '10:30', place: 'St. Nicholas Cathedral', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΦΛΩΡΙΝΑ ΚΑΡΥΔΙ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6 bearers', graveType: 'Οικογενειακός', notes: '' },
-      { ...base, id: 'demo_11', case_id: 'DEMO-2026-011', name: 'Mitchell Catherine', date: d(-15), time: '12:00', place: 'Christ Church', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ΑΜΠΑΖΟ ΜΑΥΡΟ ΛΑΚΑ', pallbearers: '4 bearers', graveType: 'Τριετία', notes: '' },
-      { ...base, id: 'demo_12', case_id: 'DEMO-2026-012', name: 'Campbell William', date: d(-18), time: '10:00', place: 'Holy Trinity Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ΚΩΣΤΑΚΗ ΑΤΛΑΣ ΜΑΤ', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_1', case_id: 'DEMO-2026-001', name: 'Johnson Michael', date: d(1), time: '10:00', place: 'St. Nicholas Cathedral', burialType: 'Ταφή', responsible: 'Thomas', coffin: 'VICTORIA BLACK GLOSS 43"', pallbearers: '6 bearers', graveType: 'Τριετία', notes: 'Confirm cemetery booking' },
+      { ...base, id: 'demo_2', case_id: 'DEMO-2026-002', name: 'Williams Elizabeth', date: d(2), time: '11:30', place: 'Holy Trinity Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ROYAL NEON HIGH GLOSS', pallbearers: '8 bearers', graveType: 'Οικογενειακός', notes: 'White flowers requested' },
+      { ...base, id: 'demo_3', case_id: 'DEMO-2026-003', name: 'Davis Robert', date: d(3), time: '09:00', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'HAMILTON CREMATION CASKET', cremationEscortCount: 2, graveType: '', notes: 'Family arriving from abroad' },
+      { ...base, id: 'demo_4', case_id: 'DEMO-2026-004', name: 'Thompson James', date: d(5), time: '10:30', place: 'St. Mary\'s Cathedral', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'VICTORIA HONEY OAK GLOSS 43"', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_5', case_id: 'DEMO-2026-005', name: 'Anderson Patricia', date: d(7), time: '12:00', place: 'Christ Church', burialType: 'Ταφή', responsible: 'Christine', coffin: 'CAMEO WHITE', pallbearers: '', graveType: 'Οικογενειακός', notes: 'Pallbearers pending confirmation' },
+      { ...base, id: 'demo_6', case_id: 'DEMO-2026-006', name: 'Clark George', date: d(10), time: '09:30', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'HAMILTON CREMATION CASKET', cremationEscortCount: 1, graveType: '', notes: '' },
+      { ...base, id: 'demo_7', case_id: 'DEMO-2026-007', name: 'Harris Dorothy', date: d(-3), time: '10:00', place: 'St. Paul\'s Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'VICTORIA BLACK GLOSS 38"', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_8', case_id: 'DEMO-2026-008', name: 'Lewis Richard', date: d(-6), time: '11:00', place: 'All Saints Chapel', burialType: 'Ταφή', responsible: 'Christine', coffin: 'ROYAL TROUGH GLOSS', pallbearers: '8 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_9', case_id: 'DEMO-2026-009', name: 'Robinson Helen', date: d(-8), time: '09:00', place: 'Hatherley Crematorium', burialType: 'Αποτεφρωση', responsible: 'Thomas', coffin: 'HAMILTON CREMATION CASKET', cremationEscortCount: 3, graveType: '', notes: '' },
+      { ...base, id: 'demo_10', case_id: 'DEMO-2026-010', name: 'Walker Arthur', date: d(-12), time: '10:30', place: 'St. Nicholas Cathedral', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'VICTORIA MAHOGANY GLOSS 43"', pallbearers: '6 bearers', graveType: 'Οικογενειακός', notes: '' },
+      { ...base, id: 'demo_11', case_id: 'DEMO-2026-011', name: 'Mitchell Catherine', date: d(-15), time: '12:00', place: 'Christ Church', burialType: 'Ταφή', responsible: 'Christine', coffin: 'CAMEO BLACK GLOSS', pallbearers: '4 bearers', graveType: 'Τριετία', notes: '' },
+      { ...base, id: 'demo_12', case_id: 'DEMO-2026-012', name: 'Campbell William', date: d(-18), time: '10:00', place: 'Holy Trinity Church', burialType: 'Ταφή', responsible: 'Andrew', coffin: 'ROYAL ATLAS MATTE', pallbearers: '6 bearers', graveType: 'Τριετία', notes: '' },
       { ...base, id: 'demo_13', case_id: 'DEMO-2026-013', name: 'Johnson Michael — 40-day memorial', date: d(2), time: '08:30', place: 'St. Nicholas Cathedral', burialType: 'Μνημόσυνο', responsible: 'Andrew', coffin: '', pallbearers: '', graveType: '', notes: 'Koliva provided by family' },
       { ...base, id: 'demo_14', case_id: 'DEMO-2026-014', name: 'Williams E. — 6-month memorial', date: d(6), time: '09:00', place: 'Christ Church', burialType: 'Μνημόσυνο', responsible: 'Christine', coffin: '', pallbearers: '', graveType: '', notes: '' },
       { ...base, id: 'demo_15', case_id: 'DEMO-2026-015', name: 'Davis R. — 40-day memorial', date: d(-3), time: '10:30', place: 'Holy Trinity Church', burialType: 'Μνημόσυνο', responsible: 'Thomas', coffin: '', pallbearers: '', graveType: '', notes: '' },
@@ -1120,11 +1120,11 @@ function loadDemoData() {
       { ...base, id: 'demo_17', case_id: 'DEMO-2026-017', name: 'Lewis R. — 40-day memorial', date: d(-20), time: '09:00', place: 'St. Nicholas Cathedral', burialType: 'Μνημόσυνο', responsible: 'Christine', coffin: '', pallbearers: '', graveType: '', notes: '' },
     ];
     warehouse = [
-      { name: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', qty: 4 }, { name: 'ΦΛΩΡΙΝΑ ΜΕΛΙ ΛΑΚΑ 40ΑΡΙ', qty: 3 },
-      { name: 'ΦΛΩΡΙΝΑ ΚΑΡΥΔΙ ΛΑΚΑ 40ΑΡΙ', qty: 3 }, { name: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 35ΑΡΙ', qty: 4 },
-      { name: 'ΚΩΣΤΑΚΗ ΝΕΟΝ ΛΑΚΑ', qty: 2 }, { name: 'ΚΩΣΤΑΚΗ ΣΚΑΦΗ ΛΑΚΑ', qty: 3 },
-      { name: 'ΚΩΣΤΑΚΗ ΑΤΛΑΣ ΜΑΤ', qty: 3 }, { name: 'ΑΜΠΑΖΟ ΜΑΥΡΟ ΛΑΚΑ', qty: 3 },
-      { name: 'ΑΜΠΑΖΟ ΛΕΥΚΟ', qty: 2 }, { name: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', qty: 3 },
+      { name: 'VICTORIA BLACK GLOSS 43"', qty: 4 }, { name: 'VICTORIA BLACK GLOSS 38"', qty: 3 },
+      { name: 'VICTORIA MAHOGANY GLOSS 43"', qty: 3 }, { name: 'VICTORIA HONEY OAK GLOSS 43"', qty: 3 },
+      { name: 'ROYAL NEON HIGH GLOSS', qty: 2 }, { name: 'ROYAL TROUGH GLOSS', qty: 3 },
+      { name: 'ROYAL ATLAS MATTE', qty: 3 }, { name: 'CAMEO BLACK GLOSS', qty: 3 },
+      { name: 'CAMEO WHITE', qty: 2 }, { name: 'HAMILTON CREMATION CASKET', qty: 3 },
     ];
     setsWarehouse = [{ name: 'GREY', qty: 8 }, { name: 'WHITE', qty: 6 }, { name: 'BEIGE', qty: 5 }];
     customLists = [{ id: 'demo_cl_1', name: 'Staff', items: ['Thomas', 'Andrew', 'Christine', 'Mary'] }];
@@ -2947,17 +2947,17 @@ function hermesFormatCeremonyName(c) {
   const name = String(c?.name || "").trim();
   const place = String(c?.place || "").trim();
   if (name && place) return `${name} · ${place}`;
-  return name || place || "Χωρίς όνομα/τοποθεσία";
+  return name || place || t("Χωρίς όνομα/τοποθεσία","No name/location");
 }
 
 function hermesMissingFields(c) {
   const missing = [];
-  if (!String(c?.date || "").trim()) missing.push("ημερομηνία");
-  if (!String(c?.time || "").trim()) missing.push("ώρα");
-  if (!String(c?.place || "").trim()) missing.push("τοποθεσία");
-  if (!String(c?.responsible || "").trim() || String(c?.responsible || "").trim() === "-") missing.push("υπεύθυνος");
-  if (!String(c?.secondPerson || "").trim() || String(c?.secondPerson || "").trim() === "Κανένας") missing.push("2ο άτομο");
-  if (String(c?.burialType || "").trim() === "Αποτεφρωση" && !Number(c?.cremationEscortCount || 0)) missing.push("συνοδοί αποτέφρωσης");
+  if (!String(c?.date || "").trim()) missing.push(t("ημερομηνία","date"));
+  if (!String(c?.time || "").trim()) missing.push(t("ώρα","time"));
+  if (!String(c?.place || "").trim()) missing.push(t("τοποθεσία","location"));
+  if (!String(c?.responsible || "").trim() || String(c?.responsible || "").trim() === "-") missing.push(t("υπεύθυνος","coordinator"));
+  if (!String(c?.secondPerson || "").trim() || String(c?.secondPerson || "").trim() === "Κανένας" || String(c?.secondPerson || "").trim() === "None") missing.push(t("2ο άτομο","2nd person"));
+  if (String(c?.burialType || "").trim() === "Αποτεφρωση" && !Number(c?.cremationEscortCount || 0)) missing.push(t("συνοδοί αποτέφρωσης","cremation escorts"));
   return missing;
 }
 
@@ -2982,8 +2982,8 @@ function hermesBuildAlerts() {
     const warehouseAlerts = typeof aiAnalyzeWarehouse === "function" ? aiAnalyzeWarehouse() : [];
     (warehouseAlerts || []).slice(0, 4).forEach((a) => {
       alerts.push({
-        title: "Αποθήκη",
-        text: typeof a === "string" ? a : (a.text || a.message || "Χρειάζεται έλεγχος αποθήκης."),
+        title: t("Αποθήκη","Warehouse"),
+        text: typeof a === "string" ? a : (a.text || a.message || t("Χρειάζεται έλεγχος αποθήκης.","Warehouse needs attention.")),
         type: "alert"
       });
     });
@@ -3010,9 +3010,9 @@ function hermesDaysUntil(dateStr) {
 }
 
 function hermesPriorityLabel(score) {
-  if (score >= 90) return "Υψηλή";
-  if (score >= 65) return "Μεσαία";
-  return "Χαμηλή";
+  if (score >= 90) return t("Υψηλή","High");
+  if (score >= 65) return t("Μεσαία","Medium");
+  return t("Χαμηλή","Low");
 }
 
 function hermesPriorityClass(score) {
@@ -3023,11 +3023,11 @@ function hermesPriorityClass(score) {
 
 function hermesDateContext(c) {
   const days = hermesDaysUntil(c?.date || "");
-  if (days === 0) return "σήμερα";
-  if (days === 1) return "αύριο";
-  if (days === null) return "χωρίς ημερομηνία";
-  if (days > 1) return `σε ${days} ημέρες`;
-  return "παλαιότερη";
+  if (days === 0) return t("σήμερα","today");
+  if (days === 1) return t("αύριο","tomorrow");
+  if (days === null) return t("χωρίς ημερομηνία","no date");
+  if (days > 1) return t(`σε ${days} ημέρες`,`in ${days} days`);
+  return t("παλαιότερη","past");
 }
 
 function hermesBuildActionCenter() {
@@ -3044,8 +3044,8 @@ function hermesBuildActionCenter() {
     if (!String(c?.date || "").trim()) {
       actions.push({
         score: 75,
-        title: "Υπόθεση χωρίς ημερομηνία",
-        text: `${name}. Χρειάζεται ημερομηνία για να μπει σωστά στο πρόγραμμα.`,
+        title: t("Υπόθεση χωρίς ημερομηνία","Case without a date"),
+        text: `${name}. ${t("Χρειάζεται ημερομηνία για να μπει σωστά στο πρόγραμμα.","Needs a date to be scheduled correctly.")}`,
         case_id: ensureCeremonyCaseId(c),
         kind: "ceremony_missing_date"
       });
@@ -3053,12 +3053,12 @@ function hermesBuildActionCenter() {
 
     if (missing.length && (days === 0 || days === 1 || days === null)) {
       let score = days === 0 ? 95 : days === 1 ? 90 : 70;
-      if (missing.includes("υπεύθυνος") || missing.includes("2ο άτομο")) score += 5;
-      if (missing.includes("συνοδοί αποτέφρωσης")) score += 3;
+      if (missing.includes(t("υπεύθυνος","coordinator")) || missing.includes(t("2ο άτομο","2nd person"))) score += 5;
+      if (missing.includes(t("συνοδοί αποτέφρωσης","cremation escorts"))) score += 3;
       actions.push({
         score: Math.min(score, 100),
-        title: `${days === 0 ? "Σήμερα" : days === 1 ? "Αύριο" : "Εκκρεμής"} τελετή με ελλείψεις`,
-        text: `${name}. Λείπει: ${missing.join(", ")}.`,
+        title: `${days === 0 ? t("Σήμερα","Today") : days === 1 ? t("Αύριο","Tomorrow") : t("Εκκρεμής","Pending")} — ${t("τελετή με ελλείψεις","ceremony with missing fields")}`,
+        text: `${name}. ${t("Λείπει","Missing")}: ${missing.join(", ")}.`,
         case_id: ensureCeremonyCaseId(c),
         kind: "ceremony_missing_fields"
       });
@@ -3067,8 +3067,8 @@ function hermesBuildActionCenter() {
     if ((days === 0 || days === 1) && !String(c?.pickupDate || "").trim()) {
       actions.push({
         score: days === 0 ? 78 : 68,
-        title: "Έλεγχος παραλαβής",
-        text: `${name}. Δεν έχει συμπληρωθεί ημερομηνία παραλαβής.`,
+        title: t("Έλεγχος παραλαβής","Check pickup date"),
+        text: `${name}. ${t("Δεν έχει συμπληρωθεί ημερομηνία παραλαβής.","Pickup date has not been filled in.")}`,
         case_id: ensureCeremonyCaseId(c),
         kind: "pickup_date_missing"
       });
@@ -3080,8 +3080,8 @@ function hermesBuildActionCenter() {
     (warehouseAlerts || []).slice(0, 5).forEach((a) => {
       actions.push({
         score: 35,
-        title: "Έλεγχος αποθήκης",
-        text: typeof a === "string" ? a : (a.text || a.message || "Χαμηλό απόθεμα ή ανάγκη ελέγχου."),
+        title: t("Έλεγχος αποθήκης","Warehouse check"),
+        text: typeof a === "string" ? a : (a.text || a.message || t("Χαμηλό απόθεμα ή ανάγκη ελέγχου.","Low stock or needs attention.")),
         kind: "warehouse"
       });
     });
@@ -3119,14 +3119,14 @@ function hermesBuildNotes() {
 
   const topPlace = [...places.entries()].sort((a, b) => b[1] - a[1])[0];
   if (topPlace && topPlace[1] >= 3) {
-    notes.push({ title: "Μοτίβο τοποθεσίας", text: `Η τοποθεσία «${topPlace[0]}» εμφανίζεται ${topPlace[1]} φορές. Αργότερα μπορεί να γίνει κανόνας γραφείου.` });
+    notes.push({ title: t("Μοτίβο τοποθεσίας","Location pattern"), text: t(`Η τοποθεσία «${topPlace[0]}» εμφανίζεται ${topPlace[1]} φορές. Αργότερα μπορεί να γίνει κανόνας γραφείου.`,`Location "${topPlace[0]}" appears ${topPlace[1]} times. Could become an office default.`) });
   }
 
   if (cremations >= 3) {
-    notes.push({ title: "Μοτίβο αποτέφρωσης", text: `Υπάρχουν ${cremations} αποτεφρώσεις στο ιστορικό. Ο Hermes θα μπορεί να προτείνει προεπιλογές για Ριτσώνα/συνοδούς.` });
+    notes.push({ title: t("Μοτίβο αποτέφρωσης","Cremation pattern"), text: t(`Υπάρχουν ${cremations} αποτεφρώσεις στο ιστορικό. Ο Hermes θα μπορεί να προτείνει προεπιλογές.`,`${cremations} cremations in history. Hermes can suggest defaults for escorts.`) });
   }
 
-  notes.push({ title: "Read-only λειτουργία", text: "Αυτή η έκδοση μόνο διαβάζει. Δεν αποθηκεύει, δεν διαγράφει και δεν στέλνει τίποτα." });
+  notes.push({ title: t("Read-only λειτουργία","Read-only mode"), text: t("Αυτή η έκδοση μόνο διαβάζει. Δεν αποθηκεύει, δεν διαγράφει και δεν στέλνει τίποτα.","This version is read-only. It does not save, delete or send anything.") });
   return notes.slice(0, 6);
 }
 
@@ -3205,11 +3205,11 @@ function hermesLearnOfficeDna() {
       key_name: "cremation_pattern",
       confidence: confidenceFromCount(cremationList.length, ceremonies.length || 1),
       value: {
-        label: "Αποτεφρώσεις",
+        label: t("Αποτεφρώσεις","Cremations"),
         appearances: cremationList.length,
         usual_place: topCremationPlace ? topCremationPlace[0] : "",
         usual_escort_count: topEscort ? topEscort[0] : "",
-        suggestion: topEscort ? `Στις αποτεφρώσεις εμφανίζονται συχνά ${topEscort[0]} συνοδοί.` : "Οι αποτεφρώσεις έχουν επαναλαμβανόμενο μοτίβο."
+        suggestion: topEscort ? t(`Στις αποτεφρώσεις εμφανίζονται συχνά ${topEscort[0]} συνοδοί.`,`Cremations usually have ${topEscort[0]} escorts.`) : t("Οι αποτεφρώσεις έχουν επαναλαμβανόμενο μοτίβο.","Cremations show a repeating pattern.")
       }
     });
   }
@@ -3222,7 +3222,7 @@ function hermesLearnOfficeDna() {
       confidence: confidenceFromCount(topResponsible[1], ceremonies.length || 1),
       value: {
         label: topResponsible[0],
-        role: "Υπεύθυνος τελετής",
+        role: t("Υπεύθυνος τελετής","Ceremony coordinator"),
         appearances: topResponsible[1]
       }
     });
@@ -3237,30 +3237,30 @@ function hermesBuildDnaList() {
   const dna = hermesLearnOfficeDna();
   return (dna || []).slice(0, 8).map((m) => {
     const v = m.value || {};
-    let title = v.label || m.key_name || "Μνήμη γραφείου";
+    let title = v.label || m.key_name || t("Μνήμη γραφείου","Office memory");
     let text = "";
     if (m.category === "temple_place") {
-      text = `${v.appearances || 0} εμφανίσεις${v.usual_burial_type ? ` · συνήθως: ${v.usual_burial_type}` : ""}${v.usual_responsible ? ` · υπεύθυνος: ${v.usual_responsible}` : ""}`;
+      text = `${v.appearances || 0} ${t("εμφανίσεις","appearances")}${v.usual_burial_type ? ` · ${t("συνήθως","usually")}: ${v.usual_burial_type}` : ""}${v.usual_responsible ? ` · ${t("υπεύθυνος","coordinator")}: ${v.usual_responsible}` : ""}`;
     } else if (m.category === "habit") {
-      text = v.suggestion || `${v.appearances || 0} εμφανίσεις`;
+      text = v.suggestion || `${v.appearances || 0} ${t("εμφανίσεις","appearances")}`;
     } else if (m.category === "collaborator") {
-      text = `${v.role || "Συνεργάτης"} · ${v.appearances || 0} εμφανίσεις`;
+      text = `${v.role || t("Συνεργάτης","Collaborator")} · ${v.appearances || 0} ${t("εμφανίσεις","appearances")}`;
     } else {
-      text = `${m.category || "Μνήμη"} · εμπιστοσύνη ${m.confidence || 0}%`;
+      text = `${m.category || t("Μνήμη","Memory")} · ${t("εμπιστοσύνη","confidence")} ${m.confidence || 0}%`;
     }
-    return { title, text: `${text} · εμπιστοσύνη ${m.confidence || 0}%` };
+    return { title, text: `${text} · ${t("εμπιστοσύνη","confidence")} ${m.confidence || 0}%` };
   });
 }
 
 function hermesEventTypeLabel(type) {
   const map = {
-    ceremony_created: "Νέα τελετή",
-    ceremony_updated: "Ενημέρωση τελετής",
-    ceremony_deleted: "Διαγραφή τελετής",
-    warehouse_updated: "Ενημέρωση αποθήκης",
-    memory_learned: "Νέα μνήμη"
+    ceremony_created: t("Νέα τελετή","New ceremony"),
+    ceremony_updated: t("Ενημέρωση τελετής","Ceremony updated"),
+    ceremony_deleted: t("Διαγραφή τελετής","Ceremony deleted"),
+    warehouse_updated: t("Ενημέρωση αποθήκης","Warehouse updated"),
+    memory_learned: t("Νέα μνήμη","New memory")
   };
-  return map[type] || String(type || "Γεγονός");
+  return map[type] || String(type || t("Γεγονός","Event"));
 }
 
 function hermesFormatEventDate(iso) {
@@ -3275,14 +3275,14 @@ function hermesBuildEventLog() {
     const p = ev.payload || {};
     const name = p.name || ev.title || hermesEventTypeLabel(ev.type);
     const details = [
-      ev.case_id ? `Υπόθεση: ${ev.case_id}` : "",
-      p.date ? `Ημ/νία: ${p.date}` : "",
-      p.place ? `Τόπος: ${p.place}` : "",
+      ev.case_id ? `${t("Υπόθεση","Case")}: ${ev.case_id}` : "",
+      p.date ? `${t("Ημ/νία","Date")}: ${p.date}` : "",
+      p.place ? `${t("Τόπος","Location")}: ${p.place}` : "",
       ev.created_at ? hermesFormatEventDate(ev.created_at) : ""
     ].filter(Boolean).join(" · ");
     return {
       title: `${hermesEventTypeLabel(ev.type)}${name ? ` — ${name}` : ""}`,
-      text: details || "Καταγράφηκε κίνηση στο γραφείο.",
+      text: details || t("Καταγράφηκε κίνηση στο γραφείο.","Activity recorded."),
       type: ev.type || "event"
     };
   });
@@ -3311,13 +3311,13 @@ function renderHermesDashboard() {
   if (pill) {
     pill.classList.remove("ok", "warn", "danger");
     if (alerts.length === 0) {
-      pill.textContent = "Όλα ήρεμα";
+      pill.textContent = t("Όλα ήρεμα","All clear");
       pill.classList.add("ok");
     } else if (alerts.length <= 3) {
-      pill.textContent = "Θέλει ματιά";
+      pill.textContent = t("Θέλει ματιά","Needs attention");
       pill.classList.add("warn");
     } else {
-      pill.textContent = "Προσοχή";
+      pill.textContent = t("Προσοχή","Warning");
       pill.classList.add("danger");
     }
   }
@@ -3326,14 +3326,14 @@ function renderHermesDashboard() {
   if (alertsBox) {
     alertsBox.innerHTML = alerts.length
       ? alerts.map(a => `<div class="hermes-item alert"><strong>${esc(a.title)}</strong>${esc(a.text)}</div>`).join("")
-      : `<div class="hermes-item empty"><strong>Καθαρό τοπίο</strong>Δεν βρέθηκαν άμεσες εκκρεμότητες για σήμερα/αύριο.</div>`;
+      : `<div class="hermes-item empty"><strong>${t("Καθαρό τοπίο","All clear")}</strong>${t("Δεν βρέθηκαν άμεσες εκκρεμότητες για σήμερα/αύριο.","No immediate issues for today/tomorrow.")}</div>`;
   }
 
   const actionBox = $("hermesActionList");
   if (actionBox) {
     actionBox.innerHTML = actions.length
       ? actions.map(a => `<div class="hermes-item action ${esc(a.level)}"><div class="hermes-action-top"><strong>${esc(a.title)}</strong><span>${esc(a.label)} · ${Number(a.score || 0)}</span></div><p>${esc(a.text)}</p>${a.case_id ? `<small>${esc(a.case_id)}</small>` : ""}</div>`).join("")
-      : `<div class="hermes-item empty"><strong>Δεν υπάρχει άμεση ενέργεια</strong>Ο Hermes δεν βρήκε κάτι που να χρειάζεται προτεραιότητα τώρα.</div>`;
+      : `<div class="hermes-item empty"><strong>${t("Δεν υπάρχει άμεση ενέργεια","No immediate actions")}</strong>${t("Ο Hermes δεν βρήκε κάτι που να χρειάζεται προτεραιότητα τώρα.","Hermes found nothing requiring priority right now.")}</div>`;
   }
 
   const notesBox = $("hermesNotesList");
@@ -3345,7 +3345,7 @@ function renderHermesDashboard() {
   if (dnaBox) {
     dnaBox.innerHTML = dnaList.length
       ? dnaList.map(m => `<div class="hermes-item memory"><strong>${esc(m.title)}</strong>${esc(m.text)}</div>`).join("")
-      : `<div class="hermes-item empty"><strong>Η μνήμη χτίζεται</strong>Μόλις υπάρχουν αρκετές επαναλήψεις, ο Hermes θα τις κρατά εδώ.</div>`;
+      : `<div class="hermes-item empty"><strong>${t("Η μνήμη χτίζεται","Memory building")}</strong>${t("Μόλις υπάρχουν αρκετές επαναλήψεις, ο Hermes θα τις κρατά εδώ.","Once enough patterns emerge, Hermes will store them here.")}</div>`;
   }
 
   hermesRenderCompletionList();
@@ -3356,7 +3356,7 @@ function renderHermesDashboard() {
     const events = hermesBuildEventLog();
     eventsBox.innerHTML = events.length
       ? events.map(e => `<div class="hermes-item event"><strong>${esc(e.title)}</strong>${esc(e.text)}</div>`).join("")
-      : `<div class="hermes-item empty"><strong>Δεν υπάρχουν ακόμη γεγονότα</strong>Μόλις αποθηκεύσεις ή επεξεργαστείς τελετή, θα εμφανιστεί εδώ.</div>`;
+      : `<div class="hermes-item empty"><strong>${t("Δεν υπάρχουν ακόμη γεγονότα","No events yet")}</strong>${t("Μόλις αποθηκεύσεις ή επεξεργαστείς τελετή, θα εμφανιστεί εδώ.","Once you save or edit a ceremony, it will appear here.")}</div>`;
   }
 }
 
@@ -5163,33 +5163,35 @@ function renderCeremonyCard(c, now) {
   const place = document.createElement("div"); place.className = "ceremony-place"; place.textContent = c.place || "";
   const caseBadge = document.createElement("div");
   caseBadge.className = "case-id-badge";
-  caseBadge.textContent = c.case_id ? `Υπόθεση: ${c.case_id}` : "";
+  caseBadge.textContent = c.case_id ? `${t("Υπόθεση","Case")}: ${c.case_id}` : "";
   const cardAiWarning = document.createElement("div");
   const notePriority = aiNotePriority(c.notes || "");
   if (notePriority === "high") {
     const fullNote = String(c.notes || "").trim();
     const shortNote = fullNote.slice(0, 140);
     cardAiWarning.className = "ceremony-ai-warning";
-    cardAiWarning.innerHTML = `🔴 ΚΡΙΣΙΜΗ ΣΗΜΕΙΩΣΗ<span>${esc(shortNote)}${fullNote.length > 140 ? "…" : ""}</span>`;
+    cardAiWarning.innerHTML = `🔴 ${t("ΚΡΙΣΙΜΗ ΣΗΜΕΙΩΣΗ","CRITICAL NOTE")}<span>${esc(shortNote)}${fullNote.length > 140 ? "…" : ""}</span>`;
   }
   const rows = document.createElement("div");
   const makeRow = (label, value) => { if (!value) return; const r = document.createElement("div"); r.className = "ceremony-row"; r.innerHTML = `<span class="ceremony-label">${esc(label)}:</span> ${esc(value)}`; rows.appendChild(r); };
-  if (c.responsible && c.responsible !== "-") makeRow("Υπεύθυνος", c.responsible);
-  if (c.secondPerson && c.secondPerson !== "Κανένας") makeRow("2ο άτομο", c.secondPerson);
-  if (c.suitcase && c.suitcase !== "-") makeRow("Βαλίτσα", c.suitcase);
-  makeRow("Τρόπος", c.burialType || "Ταφή");
-  if ((c.burialType || "Ταφή") === "Αποτεφρωση") { makeRow("Συνοδοί αίθουσας", String(Number(c.cremationEscortCount || 0))); makeRow("Ενορία πριν (σημ.)", c.cremationParishNote); }
-  else { makeRow("Τάφος", c.graveType); if (c.graveType === "Οικογενειακός") makeRow("Αριθμός τάφου", c.graveNumber); if (c.graveType === "Τριετία") makeRow("Ζώνη", c.graveZone); }
-  makeRow("Φέρετρο", c.coffin); makeRow("ΣΕΤ", c.set); makeRow("Στεφάνια / Λουλούδια", c.flowers); makeRow("Αγγελτήριο", c.announcementStatus);
-  const decorLine = c.decor ? `${c.decor}${c.decorNote ? ` – ${c.decorNote}` : ""}` : ""; makeRow("Στολισμός", decorLine);
-  makeRow("Φραγκοφόροι", c.pallbearers);
-  if (c.coffee) makeRow("Καφές", `${c.coffee}${c.coffeePlace ? ` – ${c.coffeePlace}` : ""}`);
-  makeRow("Παραλαβή", c.pickup); makeRow("2ο άτομο παραλαβής", c.pickupSecondPerson);
-  if (c.pickupDate) makeRow("Ημερομηνία παραλαβής", formatDate(c.pickupDate));
-  makeRow("Ψυκτικός θάλαμος", c.coldRoom);
+  const btDisplay = bt => bt === "Αποτεφρωση" ? t("Αποτεφρωση","Cremation") : bt === "Μνημόσυνο" ? t("Μνημόσυνο","Memorial") : t("Ταφή","Burial");
+  const gtDisplay = gt => gt === "Οικογενειακός" ? t("Οικογενειακός","Family plot") : gt === "Τριετία" ? t("Τριετία","3-year plot") : (gt || "");
+  if (c.responsible && c.responsible !== "-") makeRow(t("Υπεύθυνος","Coordinator"), c.responsible);
+  if (c.secondPerson && c.secondPerson !== "Κανένας" && c.secondPerson !== "None") makeRow(t("2ο άτομο","2nd person"), c.secondPerson);
+  if (c.suitcase && c.suitcase !== "-") makeRow(t("Βαλίτσα","Suitcase"), c.suitcase);
+  makeRow(t("Τρόπος","Type"), btDisplay(c.burialType || "Ταφή"));
+  if ((c.burialType || "Ταφή") === "Αποτεφρωση") { makeRow(t("Συνοδοί αίθουσας","Cremation escorts"), String(Number(c.cremationEscortCount || 0))); makeRow(t("Ενορία πριν (σημ.)","Parish before (note)"), c.cremationParishNote); }
+  else { makeRow(t("Τάφος","Grave"), gtDisplay(c.graveType)); if (c.graveType === "Οικογενειακός") makeRow(t("Αριθμός τάφου","Grave number"), c.graveNumber); if (c.graveType === "Τριετία") makeRow(t("Ζώνη","Zone"), c.graveZone); }
+  makeRow(t("Φέρετρο","Coffin"), c.coffin); makeRow(t("ΣΕΤ","SET"), c.set); makeRow(t("Στεφάνια / Λουλούδια","Wreaths / Flowers"), c.flowers); makeRow(t("Αγγελτήριο","Announcement"), c.announcementStatus);
+  const decorLine = c.decor ? `${c.decor}${c.decorNote ? ` – ${c.decorNote}` : ""}` : ""; makeRow(t("Στολισμός","Decoration"), decorLine);
+  makeRow(t("Φραγκοφόροι","Pallbearers"), c.pallbearers);
+  if (c.coffee) makeRow(t("Καφές","Wake/Reception"), `${c.coffee}${c.coffeePlace ? ` – ${c.coffeePlace}` : ""}`);
+  makeRow(t("Παραλαβή","Pickup"), c.pickup); makeRow(t("2ο άτομο παραλαβής","2nd pickup person"), c.pickupSecondPerson);
+  if (c.pickupDate) makeRow(t("Ημερομηνία παραλαβής","Pickup date"), formatDate(c.pickupDate));
+  makeRow(t("Ψυκτικός θάλαμος","Cold room"), c.coldRoom);
   ensureCustomFields();
   customFields.filter(f => f.enabled !== false && f.showCard !== false).forEach(f => makeRow(f.label, customFieldValueDisplay(customFieldValue(c, f), f)));
-  makeRow("Σημειώσεις", c.notes);
+  makeRow(t("Σημειώσεις","Notes"), c.notes);
   const buttons = document.createElement("div"); buttons.className = "card-buttons";
   const editBtn = document.createElement("button"); editBtn.className = "edit"; editBtn.textContent = t("Επεξεργασία", "Edit"); editBtn.dataset.action = "edit";
   const waBtn = document.createElement("button"); waBtn.type = "button"; waBtn.dataset.action = "wa"; waBtn.title = "WhatsApp"; waBtn.style.cssText = "width:36px;height:36px;border-radius:999px;border:none;display:inline-flex;align-items:center;justify-content:center;background:#25d366;cursor:pointer;color:#fff;font-weight:900;"; waBtn.textContent = "WA";
@@ -5203,23 +5205,25 @@ function renderCeremonyCard(c, now) {
 // Override v36: WhatsApp/Share με custom fields
 function buildWhatsAppMessage(c) {
   const lines = [];
-  lines.push(`🪦 Τελετή — ΣΤΑΥΡΑΚΑΚΗ`);
-  if (c.date || c.time) { const dline = c.date ? formatDate(c.date) : "—"; lines.push(`Ημερομηνία: ${dline}${c.time ? ` • ${c.time}` : ""}`); }
-  if (c.name) lines.push(`Όνομα θανόντα: ${c.name}`);
-  if (c.place) lines.push(`Τοποθεσία: ${c.place}`);
-  const method = (c.burialType || "Ταφή").trim(); lines.push(`Τρόπος: ${method}`);
-  if (method === "Αποτεφρωση") { lines.push(`Συνοδοί αίθουσας: ${Number(c.cremationEscortCount || 0)}`); if (c.cremationParishNote) lines.push(`Ενορία πριν (σημ.): ${c.cremationParishNote}`); }
-  else { if (c.graveType) lines.push(`Τάφος: ${c.graveType}`); if (c.graveType === "Οικογενειακός" && c.graveNumber) lines.push(`Αριθμός τάφου: ${c.graveNumber}`); if (c.graveType === "Τριετία" && c.graveZone) lines.push(`Ζώνη: ${c.graveZone}`); }
-  if (c.responsible && c.responsible !== "-") lines.push(`Υπεύθυνος τελετής: ${c.responsible}`);
-  if (c.secondPerson && c.secondPerson !== "Κανένας") lines.push(`2ο άτομο: ${c.secondPerson}`);
-  if (c.suitcase && c.suitcase !== "-") lines.push(`Βαλίτσα: ${c.suitcase}`);
-  if (c.coffin) lines.push(`Φέρετρο: ${c.coffin}`); if (c.set) lines.push(`ΣΕΤ: ${c.set}`); if (c.flowers) lines.push(`Στεφάνια/Λουλούδια: ${c.flowers}`); if (c.announcementStatus) lines.push(`Αγγελτήριο: ${c.announcementStatus}`);
-  const decorLine = c.decor ? `${c.decor}${c.decorNote ? ` – ${c.decorNote}` : ""}` : ""; if (decorLine) lines.push(`Στολισμός: ${decorLine}`);
-  if (c.pallbearers) lines.push(`Φραγκοφόροι: ${c.pallbearers}`); if (c.coffee) lines.push(`Καφές: ${c.coffee}${c.coffeePlace ? ` – ${c.coffeePlace}` : ""}`);
-  if (c.pickup) lines.push(`Παραλαβή: ${c.pickup}`); if (c.pickupSecondPerson) lines.push(`2ο άτομο παραλαβής: ${c.pickupSecondPerson}`); if (c.pickupDate) lines.push(`Ημερομηνία παραλαβής: ${formatDate(c.pickupDate)}`); if (c.coldRoom) lines.push(`Ψυκτικός θάλαμος: ${c.coldRoom}`);
+  const btDisplay = bt => bt === "Αποτεφρωση" ? t("Αποτεφρωση","Cremation") : bt === "Μνημόσυνο" ? t("Μνημόσυνο","Memorial") : t("Ταφή","Burial");
+  const gtDisplay = gt => gt === "Οικογενειακός" ? t("Οικογενειακός","Family plot") : gt === "Τριετία" ? t("Τριετία","3-year plot") : (gt || "");
+  lines.push(t("🪦 Τελετή — ΣΤΑΥΡΑΚΑΚΗ","🪦 Ceremony — STAURAKAKIS"));
+  if (c.date || c.time) { const dline = c.date ? formatDate(c.date) : "—"; lines.push(`${t("Ημερομηνία","Date")}: ${dline}${c.time ? ` • ${c.time}` : ""}`); }
+  if (c.name) lines.push(`${t("Όνομα θανόντα","Deceased")}: ${c.name}`);
+  if (c.place) lines.push(`${t("Τοποθεσία","Location")}: ${c.place}`);
+  const method = (c.burialType || "Ταφή").trim(); lines.push(`${t("Τρόπος","Type")}: ${btDisplay(method)}`);
+  if (method === "Αποτεφρωση") { lines.push(`${t("Συνοδοί αίθουσας","Cremation escorts")}: ${Number(c.cremationEscortCount || 0)}`); if (c.cremationParishNote) lines.push(`${t("Ενορία πριν (σημ.)","Parish before (note)")}: ${c.cremationParishNote}`); }
+  else { if (c.graveType) lines.push(`${t("Τάφος","Grave")}: ${gtDisplay(c.graveType)}`); if (c.graveType === "Οικογενειακός" && c.graveNumber) lines.push(`${t("Αριθμός τάφου","Grave number")}: ${c.graveNumber}`); if (c.graveType === "Τριετία" && c.graveZone) lines.push(`${t("Ζώνη","Zone")}: ${c.graveZone}`); }
+  if (c.responsible && c.responsible !== "-") lines.push(`${t("Υπεύθυνος τελετής","Coordinator")}: ${c.responsible}`);
+  if (c.secondPerson && c.secondPerson !== "Κανένας" && c.secondPerson !== "None") lines.push(`${t("2ο άτομο","2nd person")}: ${c.secondPerson}`);
+  if (c.suitcase && c.suitcase !== "-") lines.push(`${t("Βαλίτσα","Suitcase")}: ${c.suitcase}`);
+  if (c.coffin) lines.push(`${t("Φέρετρο","Coffin")}: ${c.coffin}`); if (c.set) lines.push(`${t("ΣΕΤ","SET")}: ${c.set}`); if (c.flowers) lines.push(`${t("Στεφάνια/Λουλούδια","Wreaths/Flowers")}: ${c.flowers}`); if (c.announcementStatus) lines.push(`${t("Αγγελτήριο","Announcement")}: ${c.announcementStatus}`);
+  const decorLine = c.decor ? `${c.decor}${c.decorNote ? ` – ${c.decorNote}` : ""}` : ""; if (decorLine) lines.push(`${t("Στολισμός","Decoration")}: ${decorLine}`);
+  if (c.pallbearers) lines.push(`${t("Φραγκοφόροι","Pallbearers")}: ${c.pallbearers}`); if (c.coffee) lines.push(`${t("Καφές","Wake/Reception")}: ${c.coffee}${c.coffeePlace ? ` – ${c.coffeePlace}` : ""}`);
+  if (c.pickup) lines.push(`${t("Παραλαβή","Pickup")}: ${c.pickup}`); if (c.pickupSecondPerson) lines.push(`${t("2ο άτομο παραλαβής","2nd pickup person")}: ${c.pickupSecondPerson}`); if (c.pickupDate) lines.push(`${t("Ημερομηνία παραλαβής","Pickup date")}: ${formatDate(c.pickupDate)}`); if (c.coldRoom) lines.push(`${t("Ψυκτικός θάλαμος","Cold room")}: ${c.coldRoom}`);
   ensureCustomFields();
   customFields.filter(f => f.enabled !== false && f.showShare !== false).forEach(f => { const v = customFieldValueDisplay(customFieldValue(c, f), f); if (v) lines.push(`${f.label}: ${v}`); });
-  if (c.notes) lines.push(`Σημειώσεις: ${c.notes}`);
+  if (c.notes) lines.push(`${t("Σημειώσεις","Notes")}: ${c.notes}`);
   return lines.join("\n");
 }
 
@@ -5227,7 +5231,7 @@ function buildWhatsAppMessage(c) {
 function renderHistory() {
   ensureHistorySearchUI();
   const container = $("historyList"); if (!container) return; container.innerHTML = "";
-  if (!ceremonies.length) { container.innerHTML = '<p style="font-size:13px;color:#6b7280;">Δεν υπάρχουν καταχωρημένες τελετές.</p>'; return; }
+  if (!ceremonies.length) { container.innerHTML = `<p style="font-size:13px;color:#6b7280;">${t("Δεν υπάρχουν καταχωρημένες τελετές.","No ceremonies registered.")}</p>`; return; }
   ensureCustomFields();
   const q = (historyQuery || "").trim().toLowerCase();
   const filtered = ceremonies.filter((c) => {
@@ -5237,18 +5241,18 @@ function renderHistory() {
     return blob.includes(q);
   });
   const sorted = [...filtered].sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.time || "").localeCompare(a.time || ""));
-  if (!sorted.length) { container.innerHTML = '<p style="font-size:13px;color:#6b7280;">Δεν βρέθηκαν αποτελέσματα.</p>'; return; }
+  if (!sorted.length) { container.innerHTML = `<p style="font-size:13px;color:#6b7280;">${t("Δεν βρέθηκαν αποτελέσματα.","No results found.")}</p>`; return; }
   for (const c of sorted) {
-    const card = document.createElement("div"); card.className = "ceremony-card history-card-clickable"; card.dataset.id = c.id; card.title = "Πάτησε για να ανοίξει η καρτέλα";
+    const card = document.createElement("div"); card.className = "ceremony-card history-card-clickable"; card.dataset.id = c.id; card.title = t("Πάτησε για να ανοίξει η καρτέλα","Click to open ceremony");
     const header = document.createElement("div"); header.className = "ceremony-header";
     const name = document.createElement("div"); name.className = "ceremony-name"; name.textContent = c.name || "-";
     const date = document.createElement("div"); date.className = "ceremony-date"; date.textContent = (c.date ? formatDate(c.date) : "—") + (c.time ? ` • ${c.time}` : "");
     header.append(name, date);
     const place = document.createElement("div"); place.className = "ceremony-place"; place.textContent = c.place || "";
-  const caseBadge = document.createElement("div");
-  caseBadge.className = "case-id-badge";
-  caseBadge.textContent = c.case_id ? `Υπόθεση: ${c.case_id}` : "";
-    const mini = document.createElement("div"); mini.className = "history-mini"; mini.textContent = [c.pickup ? `Παραλαβή: ${c.pickup}` : "", c.coffin ? `Φέρετρο: ${c.coffin}` : "", c.set ? `ΣΕΤ: ${c.set}` : ""].filter(Boolean).join(" · ");
+    const caseBadge = document.createElement("div");
+    caseBadge.className = "case-id-badge";
+    caseBadge.textContent = c.case_id ? `${t("Υπόθεση","Case")}: ${c.case_id}` : "";
+    const mini = document.createElement("div"); mini.className = "history-mini"; mini.textContent = [c.pickup ? `${t("Παραλαβή","Pickup")}: ${c.pickup}` : "", c.coffin ? `${t("Φέρετρο","Coffin")}: ${c.coffin}` : "", c.set ? `${t("ΣΕΤ","SET")}: ${c.set}` : ""].filter(Boolean).join(" · ");
     card.append(header, place, caseBadge, mini); card.addEventListener("click", () => openCeremonyModal(c.id)); container.appendChild(card);
   }
 }

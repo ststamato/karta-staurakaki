@@ -15,18 +15,33 @@
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjaWFvemJ5dmRpcWZ4d2xnZHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUxMTE5NjQsImV4cCI6MjA4MDY4Nzk2NH0.eEBYVU1VTU3CZvaSA9fh-LLEbqRPRY9ZpK7P-17kWaA";
 
   const FREE_CEREMONY_LIMIT = 5;
-  // Replace with your actual Stripe Payment Link after setup
   const STRIPE_PRO_LINK = "https://buy.stripe.com/PLACEHOLDER";
+  const STRIPE_BUSINESS_LINK = "https://buy.stripe.com/PLACEHOLDER_BUSINESS";
 
-  // Create Supabase client (window.supabase comes from CDN loaded before this file)
   const { createClient } = window.supabase;
   const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // Expose auth instance globally so app.js can use it if needed
   window.__sb = sb;
   window.__authPlan = "free";
   window.__authUser = null;
   window.__authOfficeName = "Γραφείο";
+
+  // ── Demo Mode ───────────────────────────────────────────────────────────────
+  if (new URLSearchParams(location.search).get("demo") === "1") {
+    window.__DEMO_MODE = true;
+    window.__authPlan = "business";
+    window.__authUser = { id: "demo", email: "demo@funeralos.net" };
+    window.__authOfficeName = "Demo Office";
+    document.addEventListener("DOMContentLoaded", function () {
+      const overlay = document.getElementById("authOverlay");
+      if (overlay) overlay.style.display = "none";
+      const brandPill = document.getElementById("brandPill");
+      if (brandPill) brandPill.textContent = "Demo Office";
+      const badge = document.getElementById("planBadge");
+      if (badge) { badge.textContent = "DEMO"; badge.className = "plan-badge pro"; }
+    });
+    return; // skip auth + gates
+  }
 
   // ── Auth Check ──────────────────────────────────────────────────────────────
   async function initAuth() {
@@ -41,7 +56,7 @@
       window.__authUser = user;
       const OWNER_EMAILS = ["ststamato@gmail.com"];
       const isOwner = OWNER_EMAILS.includes(user.email);
-      window.__authPlan = isOwner ? "pro" : (user.user_metadata?.plan || "free");
+      window.__authPlan = isOwner ? "business" : (user.user_metadata?.plan || "free");
       window.__authOfficeName = user.user_metadata?.office_name || user.email || "Γραφείο";
 
       // Clear localStorage if a different user logs in on the same device
@@ -82,8 +97,8 @@
     // Plan badge
     const badge = document.getElementById("planBadge");
     if (badge) {
-      badge.textContent = plan === "pro" ? "PRO" : "FREE";
-      badge.className = "plan-badge " + plan;
+      badge.textContent = plan === "business" ? "BUSINESS" : plan === "pro" ? "PRO" : "FREE";
+      badge.className = "plan-badge " + (plan === "business" ? "pro" : plan);
     }
 
     // Logout
@@ -181,19 +196,50 @@
     if (e.target.closest("#addCeremonyBtn") || e.target.closest("#newCeremonyBtn") ||
         e.target.closest("#newCeremonyHeroBtn") || e.target.closest("[data-editid]")) {
       setTimeout(function () {
-        if (window.__authPlan === "pro") applyOptFieldVisibility();
+        const plan = window.__authPlan;
+        if (plan === "pro" || plan === "business") applyOptFieldVisibility();
       }, 50);
     }
   });
 
   // ── Feature Gates (installed after auth confirmed) ──────────────────────────
   function installFeatureGates() {
-    // Always wire up markLockedFeatures (handles both free and pro)
     document.addEventListener("DOMContentLoaded", markLockedFeatures);
 
+    // Business: fully unlocked
+    if (window.__authPlan === "business") return;
+
+    // Gate: Hermes AI — Business only
+    document.addEventListener("click", function (e) {
+      const tab = e.target.closest('[data-tab="hermes"]');
+      if (!tab) return;
+      if (window.__authPlan !== "business") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        showUpgradeModal(
+          "Hermes AI — Business",
+          "Ο Hermes AI είναι διαθέσιμος μόνο στο Business πλάνο.\nΑναβάθμισε για να αποκτήσεις πρόσβαση στο Action Center, τις προτεραιότητες και τη μνήμη γραφείου."
+        );
+      }
+    }, true);
+
+    document.addEventListener("click", function (e) {
+      const btn = e.target.closest("#aiAssistantBtn");
+      if (!btn) return;
+      if (window.__authPlan !== "business") {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        showUpgradeModal(
+          "AI Βοηθός — Business",
+          "Ο AI Βοηθός είναι διαθέσιμος μόνο στο Business πλάνο.\nΑναβάθμισε για πρόσβαση σε Briefing, Ελλείψεις, Cloud AI και πλήρη έλεγχο."
+        );
+      }
+    }, true);
+
+    // Pro: AI gated, rest unlocked
     if (window.__authPlan === "pro") return;
 
-    // Gate 1: Ceremony limit
+    // Gate: Ceremony limit (free only)
     const ceremonyForm = document.getElementById("ceremonyForm");
     if (ceremonyForm) {
       ceremonyForm.addEventListener("submit", function (e) {
@@ -210,77 +256,51 @@
           e.stopImmediatePropagation();
           showUpgradeModal(
             "Όριο τελετών",
-            "Έχεις φτάσει τις " + FREE_CEREMONY_LIMIT + " τελετές αυτό τον μήνα για το δωρεάν πλάνο.\nΑναβάθμισε σε Pro για απεριόριστες τελετές."
+            "Έχεις φτάσει τις " + FREE_CEREMONY_LIMIT + " τελετές αυτό τον μήνα για το δωρεάν πλάνο.\nΑναβάθμισε σε Pro ή Business για απεριόριστες τελετές."
           );
         }
       }, true);
     }
-
-    // Gate 2: Hermes tab lock
-    document.addEventListener("click", function (e) {
-      const tab = e.target.closest('[data-tab="hermes"]');
-      if (!tab) return;
-      if (window.__authPlan !== "pro") {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        showUpgradeModal(
-          "Hermes AI — Pro",
-          "Ο Hermes AI είναι διαθέσιμος μόνο στο Pro πλάνο.\nΑναβάθμισε για να αποκτήσεις πρόσβαση στο Action Center, τις προτεραιότητες και τη μνήμη γραφείου."
-        );
-      }
-    }, true);
-
-    // Gate 3: AI Assistant button lock
-    document.addEventListener("click", function (e) {
-      const btn = e.target.closest("#aiAssistantBtn");
-      if (!btn) return;
-      if (window.__authPlan !== "pro") {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        showUpgradeModal(
-          "AI Βοηθός — Pro",
-          "Ο AI Βοηθός είναι διαθέσιμος μόνο στο Pro πλάνο.\nΑναβάθμισε για πρόσβαση σε Briefing, Ελλείψεις, Cloud AI και πλήρη έλεγχο."
-        );
-      }
-    }, true);
   }
 
   function markLockedFeatures() {
-    if (window.__authPlan === "pro") {
+    const plan = window.__authPlan;
+    const isPaid = plan === "pro" || plan === "business";
+
+    if (isPaid) {
       const panel = document.getElementById("optionalFieldsPanel");
-      if (panel) {
-        panel.style.display = "";
-        renderOptFieldsToggles();
-      }
-      return;
+      if (panel) { panel.style.display = ""; renderOptFieldsToggles(); }
     }
 
-    setTimeout(function () {
-      // Hide all optional ceremony form fields
-      document.querySelectorAll(".opt-field").forEach(function (el) {
-        el.style.display = "none";
-      });
+    if (plan !== "business") {
+      setTimeout(function () {
+        const hermesTab = document.querySelector('[data-tab="hermes"]');
+        if (hermesTab && !hermesTab.querySelector(".pro-lock")) {
+          const lock = document.createElement("span");
+          lock.className = "pro-lock";
+          lock.textContent = "BIZ";
+          lock.style.cssText = "margin-left:5px;font-size:9px;font-weight:700;background:#c8a96e;color:#0f1523;padding:1px 5px;border-radius:4px;letter-spacing:.5px;";
+          hermesTab.appendChild(lock);
+        }
+      }, 400);
+    }
 
-      const hermesTab = document.querySelector('[data-tab="hermes"]');
-      if (hermesTab && !hermesTab.querySelector(".pro-lock")) {
-        const lock = document.createElement("span");
-        lock.className = "pro-lock";
-        lock.textContent = "PRO";
-        lock.style.cssText = "margin-left:5px;font-size:9px;font-weight:700;background:#c8a96e;color:#0f1523;padding:1px 5px;border-radius:4px;letter-spacing:.5px;";
-        hermesTab.appendChild(lock);
-      }
+    if (plan === "free") {
+      setTimeout(function () {
+        document.querySelectorAll(".opt-field").forEach(function (el) { el.style.display = "none"; });
 
-      const heroGrid = document.getElementById("homeDashboardGrid");
-      if (heroGrid && !document.getElementById("upgradeNudge")) {
-        const nudge = document.createElement("div");
-        nudge.id = "upgradeNudge";
-        nudge.style.cssText = "margin-top:12px;padding:12px 16px;background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);border-radius:10px;font-size:13px;color:#c8a96e;display:flex;align-items:center;justify-content:space-between;gap:12px;";
-        nudge.innerHTML = '<span>🔒 Δωρεάν πλάνο · <b id="monthCeremonyCount">0</b>/' + FREE_CEREMONY_LIMIT + " τελετές αυτό τον μήνα</span>" +
-          '<button onclick="window.__showUpgrade(\'Αναβάθμιση\',\'Αναβάθμισε για απεριόριστες τελετές, AI Hermes και Cloud sync.\')" style="background:#c8a96e;color:#0f1523;border:none;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;">Αναβάθμιση Pro →</button>';
-        heroGrid.after(nudge);
-        updateMonthCount();
-      }
-    }, 600);
+        const heroGrid = document.getElementById("homeDashboardGrid");
+        if (heroGrid && !document.getElementById("upgradeNudge")) {
+          const nudge = document.createElement("div");
+          nudge.id = "upgradeNudge";
+          nudge.style.cssText = "margin-top:12px;padding:12px 16px;background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);border-radius:10px;font-size:13px;color:#c8a96e;display:flex;align-items:center;justify-content:space-between;gap:12px;";
+          nudge.innerHTML = '<span>🔒 Δωρεάν πλάνο · <b id="monthCeremonyCount">0</b>/' + FREE_CEREMONY_LIMIT + " τελετές αυτό τον μήνα</span>" +
+            '<a href="./login.html" style="background:#c8a96e;color:#0f1523;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;text-decoration:none;">Δες τιμές →</a>';
+          heroGrid.after(nudge);
+          updateMonthCount();
+        }
+      }, 600);
+    }
   }
 
   function updateMonthCount() {

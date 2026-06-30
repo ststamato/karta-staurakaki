@@ -60,7 +60,7 @@
     .step h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
     .step p { font-size: 14px; color: var(--muted); }
 
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 700px; margin: 0 auto; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
     .price-card { padding: 36px 28px; border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); background: rgba(255,255,255,.03); position: relative; }
     .price-card.featured { border-color: var(--gold); background: rgba(200,169,110,.06); }
     .price-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--ink); font-size: 11px; font-weight: 800; padding: 4px 14px; border-radius: 100px; letter-spacing: 1px; text-transform: uppercase; }
@@ -122,7 +122,7 @@
   <p class="hero-sub">Διαχείριση τελετών, αποθήκης, AI βοηθού και προμηθευτών από μια εφαρμογή. Από κινητό ή desktop.</p>
   <div class="hero-cta">
     <a href="../login.html?tab=register" class="btn btn-primary btn-lg">Ξεκίνα δωρεάν →</a>
-    <a href="#pricing" class="btn btn-ghost btn-lg">Δες τιμές</a>
+    <a href="../app.html?demo=1" class="btn btn-ghost btn-lg">Δοκίμασε live demo →</a>
   </div>
   <div class="hero-trust">
     <div class="trust-item"><div class="trust-dot"></div>Χωρίς κάρτα πληρωμής</div>
@@ -183,19 +183,30 @@
       <div class="price-card featured">
         <div class="price-badge">ΣΥΝΙΣΤΩΜΕΝΟ</div>
         <div class="price-name">Pro</div>
-        <div class="price-amount">€39 <small>/μήνα</small></div>
-        <div class="price-period">ή €390/χρόνο (2 μήνες δωρεάν)</div>
+        <div class="price-amount">€49 <small>/μήνα</small></div>
+        <div class="price-period">ή €490/χρόνο — 2 μήνες δωρεάν</div>
         <ul class="price-features">
           <li><span class="check">✓</span> Απεριόριστες τελετές</li>
-          <li><span class="check">✓</span> Αποθήκη φερέτρων & ΣΕΤ</li>
-          <li><span class="check">✓</span> Πλήρης κάρτα τελετής</li>
           <li><span class="check">✓</span> Cloud sync σε όλες τις συσκευές</li>
-          <li><span class="check">✓</span> AI Hermes (Action Center)</li>
+          <li><span class="check">✓</span> Πλήρης κάρτα τελετής</li>
           <li><span class="check">✓</span> Στατιστικά & Ιστορικό</li>
           <li><span class="check">✓</span> Προμηθευτές</li>
-          <li><span class="check">✓</span> Email υποστήριξη</li>
+          <li><span class="cross">✗</span> <span style="color:var(--muted)">AI Hermes</span></li>
         </ul>
         <a href="../login.html?tab=register" class="price-cta price-cta-gold">Ξεκίνα Pro →</a>
+      </div>
+      <div class="price-card" style="border-color:rgba(200,169,110,.35);">
+        <div class="price-name">Business</div>
+        <div class="price-amount">€99 <small>/μήνα</small></div>
+        <div class="price-period">πολλαπλοί χρήστες ανά γραφείο</div>
+        <ul class="price-features">
+          <li><span class="check">✓</span> Όλα του Pro</li>
+          <li><span class="check">✓</span> Hermes AI Action Center</li>
+          <li><span class="check">✓</span> Πολλαπλοί χρήστες</li>
+          <li><span class="check">✓</span> Ρόλοι προσωπικού</li>
+          <li><span class="check">✓</span> Προτεραιότητα υποστήριξης</li>
+        </ul>
+        <a href="mailto:support@funeralos.net" class="price-cta price-cta-ghost">Επικοινωνία →</a>
       </div>
     </div>
   </div>

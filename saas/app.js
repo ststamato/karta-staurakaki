@@ -76,20 +76,20 @@ const esc = (s) =>
 function t(gr, en) { return window.__appLang === "en" ? en : gr; }
 
 // ---------------- Dropdown επιλογές ----------------
-const RESPONSIBLE_OPTIONS = ["-", "Τζίμης", "Σταύρος", "Βασίλης", "Χάρης", "Άλλος"];
-const DEFAULT_SECOND_HELPERS = ["Κανένας", "Βασίλης", "Χάρης", "Άλλος"];
-const SUITCASE_OPTIONS = ["-", "Γιώργος", "Βάσω", "Διονυσία", "Άλλος"];
+const RESPONSIBLE_OPTIONS = ["-"];
+const DEFAULT_SECOND_HELPERS = ["Κανένας"];
+const SUITCASE_OPTIONS = ["-"];
 
 // ---------------- Πλήρης Αποθήκη Επιλογών για όλα τα dropdowns ----------------
 const DEFAULT_OPTIONS = {
-  responsiblePeople: ["-", "Τζίμης", "Σταύρος", "Βασίλης", "Χάρης", "Άλλος"],
-  secondPeople: ["Κανένας", "Βασίλης", "Χάρης", "Άλλος"],
-  pickupSecondPeople: ["", "Βασίλης", "Χάρης", "Άλλος"],
-  suitcasePeople: ["-", "Γιώργος", "Βάσω", "Διονυσία", "Άλλος"],
-  decorators: ["-", "Κλέαρχος", "Ρίζος", "Λάμπρος", "Χωρίς στολισμό", "Άλλο"],
-  pallbearersOptions: ["-", "4άδα", "6άδα", "8άδα", "10άδα", "12άδα", "Χωρίς φραγκοφόρους", "Άλλο"],
-  coffeeOptions: ["-", "Ναι", "Όχι", "Άλλο"],
-  graveZones: ["", "Α", "Β", "Γ"]
+  responsiblePeople: ["-"],
+  secondPeople: ["Κανένας"],
+  pickupSecondPeople: [],
+  suitcasePeople: ["-"],
+  decorators: [],
+  pallbearersOptions: [],
+  coffeeOptions: [],
+  graveZones: []
 };
 
 const DEFAULT_OPTIONS_EN = {
@@ -870,6 +870,7 @@ async function cloudLoadData() {
 }
 
 async function cloudSaveAll() {
+  if (window.__DEMO_MODE) return;
   const base = `${SUPABASE_URL}/rest/v1`;
   const session = await getCloudSession();
   if (!session) { console.error("No authenticated user for cloud save"); return; }
@@ -1093,8 +1094,61 @@ function clearCeremonyOptionReferences(key, oldValue) {
   });
 }
 
+// ---------------- Demo Mode ----------------
+function loadDemoData() {
+  const d = (n) => { const dt = new Date(); dt.setDate(dt.getDate() + n); return dt.toISOString().slice(0, 10); };
+  const base = { sheet: '', set: '', flowers: '', announcementStatus: 'Δεν χρειάζεται', decor: '', decorNote: '', secondPerson: 'Κανένας', pickupSecondPerson: '', suitcase: '-', coffee: '', coffeePlace: '', pickup: '', pickupDate: '', coldRoom: '', cremationEscortCount: 0, cremationParishNote: '', graveNumber: '', graveZone: '', customValues: {} };
+  ceremonies = [
+    { ...base, id: 'demo_1', case_id: 'DEMO-2026-001', name: 'Παπαδόπουλος Γεώργιος', date: d(1), time: '10:00', place: 'Ι.Ν. Αγ. Νικολάου Κηφισιάς', burialType: 'Ταφή', responsible: 'Θανάσης', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6άδα', graveType: 'Τριετία', notes: 'Να επιβεβαιωθεί το νεκροταφείο' },
+    { ...base, id: 'demo_2', case_id: 'DEMO-2026-002', name: 'Ζαφειρίου Αγγελική', date: d(2), time: '11:30', place: 'Ι.Ν. Κοιμήσεως Θεοτόκου Αμαρουσίου', burialType: 'Ταφή', responsible: 'Σταύρος', coffin: 'ΚΩΣΤΑΚΗ ΝΕΟΝ ΛΑΚΑ', pallbearers: '8άδα', graveType: 'Οικογενειακός', notes: 'Λευκά λουλούδια' },
+    { ...base, id: 'demo_3', case_id: 'DEMO-2026-003', name: 'Κωνσταντίνου Δημήτρης', date: d(3), time: '09:00', place: 'Αποτεφρωτήριο Ριτσώνας', burialType: 'Αποτεφρωση', responsible: 'Θανάσης', coffin: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 2, graveType: '', notes: 'Συγγενείς από Θεσσαλονίκη' },
+    { ...base, id: 'demo_4', case_id: 'DEMO-2026-004', name: 'Νικολάου Σταύρος', date: d(5), time: '10:30', place: 'Ι.Ν. Αγ. Παντελεήμονος Ιλίου', burialType: 'Ταφή', responsible: 'Σταύρος', coffin: 'ΦΛΩΡΙΝΑ ΜΕΛΙ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6άδα', graveType: 'Τριετία', notes: '' },
+    { ...base, id: 'demo_5', case_id: 'DEMO-2026-005', name: 'Παναγιωτίδου Ελένη', date: d(7), time: '12:00', place: 'Ι.Ν. Αγ. Τριάδος Χολαργού', burialType: 'Ταφή', responsible: 'Χρήστος', coffin: 'ΑΜΠΑΖΟ ΛΕΥΚΟ', pallbearers: '', graveType: 'Οικογενειακός', notes: 'Φραγκοφόροι εκκρεμούν' },
+    { ...base, id: 'demo_6', case_id: 'DEMO-2026-006', name: 'Βασιλείου Ανδρέας', date: d(10), time: '09:30', place: 'Αποτεφρωτήριο Ριτσώνας', burialType: 'Αποτεφρωση', responsible: 'Θανάσης', coffin: 'ΚΟΣΜΑΣ ΓΟΡΙΛΑ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 1, graveType: '', notes: '' },
+    { ...base, id: 'demo_7', case_id: 'DEMO-2026-007', name: 'Χριστοδούλου Μαρία', date: d(-3), time: '10:00', place: 'Ι.Ν. Αγ. Σπυρίδωνος Πειραιά', burialType: 'Ταφή', responsible: 'Σταύρος', coffin: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 35ΑΡΙ', pallbearers: '6άδα', graveType: 'Τριετία', notes: '' },
+    { ...base, id: 'demo_8', case_id: 'DEMO-2026-008', name: 'Σπηλιώτης Κώστας', date: d(-6), time: '11:00', place: 'Ι.Ν. Αγ. Δημητρίου Αμπελοκήπων', burialType: 'Ταφή', responsible: 'Χρήστος', coffin: 'ΚΩΣΤΑΚΗ ΣΚΑΦΗ ΛΑΚΑ', pallbearers: '8άδα', graveType: 'Τριετία', notes: '' },
+    { ...base, id: 'demo_9', case_id: 'DEMO-2026-009', name: 'Αλεξίου Φωτεινή', date: d(-8), time: '09:00', place: 'Αποτεφρωτήριο Ριτσώνας', burialType: 'Αποτεφρωση', responsible: 'Θανάσης', coffin: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', cremationEscortCount: 3, graveType: '', notes: '' },
+    { ...base, id: 'demo_10', case_id: 'DEMO-2026-010', name: 'Παπαδάκης Νίκος', date: d(-12), time: '10:30', place: 'Ι.Ν. Αγ. Νικολάου Κηφισιάς', burialType: 'Ταφή', responsible: 'Σταύρος', coffin: 'ΦΛΩΡΙΝΑ ΚΑΡΥΔΙ ΛΑΚΑ 40ΑΡΙ', pallbearers: '6άδα', graveType: 'Οικογενειακός', notes: '' },
+    { ...base, id: 'demo_11', case_id: 'DEMO-2026-011', name: 'Δημητρίου Χρυσούλα', date: d(-15), time: '12:00', place: 'Ι.Ν. Αγ. Τριάδος Χολαργού', burialType: 'Ταφή', responsible: 'Χρήστος', coffin: 'ΑΜΠΑΖΟ ΜΑΥΡΟ ΛΑΚΑ', pallbearers: '4άδα', graveType: 'Τριετία', notes: '' },
+    { ...base, id: 'demo_12', case_id: 'DEMO-2026-012', name: 'Μπέης Σωκράτης', date: d(-18), time: '10:00', place: 'Ι.Ν. Αγ. Παντελεήμονος Ιλίου', burialType: 'Ταφή', responsible: 'Σταύρος', coffin: 'ΚΩΣΤΑΚΗ ΑΤΛΑΣ ΜΑΤ', pallbearers: '6άδα', graveType: 'Τριετία', notes: '' },
+    { ...base, id: 'demo_13', case_id: 'DEMO-2026-013', name: 'Παπαδόπουλος Αντώνης — 40ήμερο', date: d(2), time: '08:30', place: 'Ι.Ν. Αγ. Νικολάου Κηφισιάς', burialType: 'Μνημόσυνο', responsible: 'Σταύρος', coffin: '', pallbearers: '', graveType: '', notes: 'Κόλλυβα από οικογένεια' },
+    { ...base, id: 'demo_14', case_id: 'DEMO-2026-014', name: 'Θεοδωρίδου Βάσω — 6μηνο', date: d(6), time: '09:00', place: 'Ι.Ν. Αγ. Τριάδος Χολαργού', burialType: 'Μνημόσυνο', responsible: 'Χρήστος', coffin: '', pallbearers: '', graveType: '', notes: '' },
+    { ...base, id: 'demo_15', case_id: 'DEMO-2026-015', name: 'Αλεξίου Χαράλαμπος — 40ήμερο', date: d(-3), time: '10:30', place: 'Ι.Ν. Αγ. Παντελεήμονος Ιλίου', burialType: 'Μνημόσυνο', responsible: 'Θανάσης', coffin: '', pallbearers: '', graveType: '', notes: '' },
+    { ...base, id: 'demo_16', case_id: 'DEMO-2026-016', name: 'Χαλκιάς Ιωάννης — ετήσιο', date: d(-7), time: '08:30', place: 'Ι.Ν. Αγ. Δημητρίου Αμπελοκήπων', burialType: 'Μνημόσυνο', responsible: 'Σταύρος', coffin: '', pallbearers: '', graveType: '', notes: '' },
+    { ...base, id: 'demo_17', case_id: 'DEMO-2026-017', name: 'Κατσαρός Βασίλης — 40ήμερο', date: d(-20), time: '09:00', place: 'Ι.Ν. Αγ. Νικολάου Κηφισιάς', burialType: 'Μνημόσυνο', responsible: 'Χρήστος', coffin: '', pallbearers: '', graveType: '', notes: '' },
+  ];
+  // 30 φέρετρα — 2 with critical low stock to trigger alerts
+  warehouse = [
+    { name: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 40ΑΡΙ', qty: 4 },
+    { name: 'ΦΛΩΡΙΝΑ ΜΕΛΙ ΛΑΚΑ 40ΑΡΙ', qty: 3 },
+    { name: 'ΦΛΩΡΙΝΑ ΚΑΡΥΔΙ ΛΑΚΑ 40ΑΡΙ', qty: 3 },
+    { name: 'ΦΛΩΡΙΝΑ ΜΑΥΡΟ ΛΑΚΑ 35ΑΡΙ', qty: 4 },
+    { name: 'ΚΩΣΤΑΚΗ ΝΕΟΝ ΛΑΚΑ', qty: 2 },
+    { name: 'ΚΩΣΤΑΚΗ ΣΚΑΦΗ ΛΑΚΑ', qty: 3 },
+    { name: 'ΚΩΣΤΑΚΗ ΑΤΛΑΣ ΜΑΤ', qty: 3 },
+    { name: 'ΑΜΠΑΖΟ ΜΑΥΡΟ ΛΑΚΑ', qty: 3 },
+    { name: 'ΑΜΠΑΖΟ ΛΕΥΚΟ', qty: 2 },
+    { name: 'ΔΗΜΟΥ ΑΠΟΤΕΦΡΩΤΙΚΟ', qty: 3 },
+  ];
+  setsWarehouse = [
+    { name: 'ΓΚΡΙ', qty: 8 },
+    { name: 'ΛΕΥΚΟ', qty: 6 },
+    { name: 'ΜΠΕΖ', qty: 5 },
+  ];
+  customLists = [
+    { id: 'demo_cl_1', name: 'Προσωπικό', items: ['Θανάσης', 'Σταύρος', 'Χρήστος', 'Μαρία'] },
+  ];
+  secondHelpers = ['Κανένας', 'Θανάσης', 'Σταύρος', 'Χρήστος'];
+  changeLog = [];
+  optionWarehouse = {};
+}
+
 // ---------------- Load / Save ----------------
 async function loadData() {
+  if (window.__DEMO_MODE) {
+    loadDemoData();
+    return;
+  }
   if (USE_CLOUD) {
     try {
       await cloudLoadData();
@@ -1197,6 +1251,7 @@ async function loadData() {
 }
 
 async function saveData() {
+  if (window.__DEMO_MODE) return;
   localStorage.setItem(CEREMONIES_KEY, JSON.stringify(ceremonies));
   localStorage.setItem(WAREHOUSE_KEY, JSON.stringify(warehouse));
   localStorage.setItem(SETS_KEY, JSON.stringify(setsWarehouse));
@@ -4664,6 +4719,14 @@ function openCeremonyModal(id = null) {
 
 // ---------------- Init ----------------
 document.addEventListener("DOMContentLoaded", async () => {
+  if (window.__DEMO_MODE) {
+    const banner = document.createElement("div");
+    banner.id = "demoBanner";
+    banner.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#c8a96e,#e8d5b0);color:#0f1523;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;box-shadow:0 2px 12px rgba(0,0,0,.3);";
+    banner.innerHTML = '<span>⚱️ DEMO OFFICE — Δοκιμαστικά δεδομένα · Καμία αλλαγή δεν αποθηκεύεται</span><a href="./login.html?tab=register" style="background:#0f1523;color:#c8a96e;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:12px;white-space:nowrap;">Ξεκίνα δωρεάν →</a>';
+    document.body.prepend(banner);
+    document.body.style.paddingTop = "42px";
+  }
   try {
     ensureDeviceLabel();
     await loadData();

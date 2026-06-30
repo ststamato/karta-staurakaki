@@ -12,6 +12,7 @@
 
   const FREE_CEREMONY_LIMIT = 5;
   const STRIPE_PRO_LINK = "https://buy.stripe.com/PLACEHOLDER";
+  const STRIPE_BUSINESS_LINK = "https://buy.stripe.com/PLACEHOLDER_BUSINESS";
 
   const { createClient } = window.supabase;
   const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -20,6 +21,23 @@
   window.__authPlan = "free";
   window.__authUser = null;
   window.__authOfficeName = "My Funeral Home";
+
+  // ── Demo Mode ───────────────────────────────────────────────────────────────
+  if (new URLSearchParams(location.search).get("demo") === "1") {
+    window.__DEMO_MODE = true;
+    window.__authPlan = "business";
+    window.__authUser = { id: "demo", email: "demo@funeralos.net" };
+    window.__authOfficeName = "Demo Office";
+    document.addEventListener("DOMContentLoaded", function () {
+      const overlay = document.getElementById("authOverlay");
+      if (overlay) overlay.style.display = "none";
+      const brandPill = document.getElementById("brandPill");
+      if (brandPill) brandPill.textContent = "Demo Office";
+      const badge = document.getElementById("planBadge");
+      if (badge) { badge.textContent = "DEMO"; badge.className = "plan-badge pro"; }
+    });
+    return;
+  }
 
   // ── Auth Check ────────────────────────────────────────────────────────────
   async function initAuth() {
@@ -33,7 +51,7 @@
       window.__authUser = user;
       const OWNER_EMAILS = ["ststamato@gmail.com"];
       const isOwner = OWNER_EMAILS.includes(user.email);
-      window.__authPlan = isOwner ? "pro" : (user.user_metadata?.plan || "free");
+      window.__authPlan = isOwner ? "business" : (user.user_metadata?.plan || "free");
       window.__authOfficeName = user.user_metadata?.office_name || user.email || "My Funeral Home";
 
       // Clear localStorage if a different user logs in on the same device
@@ -67,7 +85,7 @@
     if (brandPill) brandPill.textContent = officeName;
 
     const badge = document.getElementById("planBadge");
-    if (badge) { badge.textContent = plan === "pro" ? "PRO" : "FREE"; badge.className = "plan-badge " + plan; }
+    if (badge) { badge.textContent = plan === "business" ? "BUSINESS" : plan === "pro" ? "PRO" : "FREE"; badge.className = "plan-badge " + (plan === "business" ? "pro" : plan); }
 
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
@@ -78,12 +96,32 @@
 
   // ── Feature Gates ─────────────────────────────────────────────────────────
   function installFeatureGates() {
-    // Always wire up markLockedFeatures (handles both free and pro)
     document.addEventListener("DOMContentLoaded", markLockedFeatures);
+
+    if (window.__authPlan === "business") return;
+
+    // Gate: Hermes AI — Business only
+    document.addEventListener("click", function (e) {
+      const tab = e.target.closest('[data-tab="hermes"]');
+      if (!tab) return;
+      if (window.__authPlan !== "business") {
+        e.preventDefault(); e.stopImmediatePropagation();
+        showUpgradeModal("Hermes AI — Business feature", "Hermes AI is available on the Business plan.\nUpgrade to unlock the Action Center, priorities and office memory.");
+      }
+    }, true);
+
+    document.addEventListener("click", function (e) {
+      const btn = e.target.closest("#aiAssistantBtn");
+      if (!btn) return;
+      if (window.__authPlan !== "business") {
+        e.preventDefault(); e.stopImmediatePropagation();
+        showUpgradeModal("AI Assistant — Business feature", "The AI Assistant is available on the Business plan.\nUpgrade for Daily Briefing, Gap Analysis, Cloud AI and full analysis.");
+      }
+    }, true);
 
     if (window.__authPlan === "pro") return;
 
-    // Ceremony limit
+    // Gate: Ceremony limit (free only)
     const ceremonyForm = document.getElementById("ceremonyForm");
     if (ceremonyForm) {
       ceremonyForm.addEventListener("submit", function (e) {
@@ -97,71 +135,51 @@
           e.stopImmediatePropagation();
           showUpgradeModal(
             "Ceremony limit reached",
-            "You've used " + FREE_CEREMONY_LIMIT + " ceremonies this month on the free plan.\nUpgrade to Pro for unlimited ceremonies."
+            "You've used " + FREE_CEREMONY_LIMIT + " ceremonies this month on the free plan.\nUpgrade to Pro or Business for unlimited ceremonies."
           );
         }
       }, true);
     }
-
-    // Hermes tab lock
-    document.addEventListener("click", function (e) {
-      const tab = e.target.closest('[data-tab="hermes"]');
-      if (!tab) return;
-      if (window.__authPlan !== "pro") {
-        e.preventDefault(); e.stopImmediatePropagation();
-        showUpgradeModal("Hermes AI — Pro feature", "Hermes AI is available on the Pro plan.\nUpgrade to unlock the Action Center, priorities and office memory.");
-      }
-    }, true);
-
-    // AI Assistant button lock
-    document.addEventListener("click", function (e) {
-      const btn = e.target.closest("#aiAssistantBtn");
-      if (!btn) return;
-      if (window.__authPlan !== "pro") {
-        e.preventDefault(); e.stopImmediatePropagation();
-        showUpgradeModal("AI Assistant — Pro feature", "The AI Assistant is available on the Pro plan.\nUpgrade for Daily Briefing, Gap Analysis, Cloud AI and full analysis.");
-      }
-    }, true);
-
   }
 
   function markLockedFeatures() {
-    if (window.__authPlan === "pro") {
-      // Show optional fields Settings panel for Pro users
+    const plan = window.__authPlan;
+    const isPaid = plan === "pro" || plan === "business";
+
+    if (isPaid) {
       const panel = document.getElementById("optionalFieldsPanel");
-      if (panel) {
-        panel.style.display = "";
-        renderOptFieldsToggles();
-      }
-      return;
+      if (panel) { panel.style.display = ""; renderOptFieldsToggles(); }
     }
 
-    setTimeout(function () {
-      // Hide all optional ceremony form fields
-      document.querySelectorAll(".opt-field").forEach(function (el) {
-        el.style.display = "none";
-      });
+    if (plan !== "business") {
+      setTimeout(function () {
+        const hermesTab = document.querySelector('[data-tab="hermes"]');
+        if (hermesTab && !hermesTab.querySelector(".pro-lock")) {
+          const lock = document.createElement("span");
+          lock.className = "pro-lock";
+          lock.textContent = "BIZ";
+          lock.style.cssText = "margin-left:5px;font-size:9px;font-weight:700;background:#c8a96e;color:#0f1523;padding:1px 5px;border-radius:4px;letter-spacing:.5px;";
+          hermesTab.appendChild(lock);
+        }
+      }, 400);
+    }
 
-      const hermesTab = document.querySelector('[data-tab="hermes"]');
-      if (hermesTab && !hermesTab.querySelector(".pro-lock")) {
-        const lock = document.createElement("span");
-        lock.className = "pro-lock";
-        lock.textContent = "PRO";
-        lock.style.cssText = "margin-left:5px;font-size:9px;font-weight:700;background:#c8a96e;color:#0f1523;padding:1px 5px;border-radius:4px;letter-spacing:.5px;";
-        hermesTab.appendChild(lock);
-      }
+    if (plan === "free") {
+      setTimeout(function () {
+        document.querySelectorAll(".opt-field").forEach(function (el) { el.style.display = "none"; });
 
-      const heroGrid = document.getElementById("homeDashboardGrid");
-      if (heroGrid && !document.getElementById("upgradeNudge")) {
-        const nudge = document.createElement("div");
-        nudge.id = "upgradeNudge";
-        nudge.style.cssText = "margin-top:12px;padding:12px 16px;background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);border-radius:10px;font-size:13px;color:#c8a96e;display:flex;align-items:center;justify-content:space-between;gap:12px;";
-        nudge.innerHTML = '<span>🔒 Free plan · <b id="monthCeremonyCount">0</b>/' + FREE_CEREMONY_LIMIT + " ceremonies this month</span>" +
-          '<button onclick="window.__showUpgrade(\'Upgrade to Pro\',\'Upgrade for unlimited ceremonies, Hermes AI and cloud sync.\')" style="background:#c8a96e;color:#0f1523;border:none;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;">Upgrade to Pro →</button>';
-        heroGrid.after(nudge);
-        updateMonthCount();
-      }
-    }, 600);
+        const heroGrid = document.getElementById("homeDashboardGrid");
+        if (heroGrid && !document.getElementById("upgradeNudge")) {
+          const nudge = document.createElement("div");
+          nudge.id = "upgradeNudge";
+          nudge.style.cssText = "margin-top:12px;padding:12px 16px;background:rgba(200,169,110,.1);border:1px solid rgba(200,169,110,.25);border-radius:10px;font-size:13px;color:#c8a96e;display:flex;align-items:center;justify-content:space-between;gap:12px;";
+          nudge.innerHTML = '<span>🔒 Free plan · <b id="monthCeremonyCount">0</b>/' + FREE_CEREMONY_LIMIT + " ceremonies this month</span>" +
+            '<a href="./login.html" style="background:#c8a96e;color:#0f1523;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;text-decoration:none;">See plans →</a>';
+          heroGrid.after(nudge);
+          updateMonthCount();
+        }
+      }, 600);
+    }
   }
 
   var OPT_FIELD_LABELS = {
@@ -248,7 +266,8 @@
   document.addEventListener("click", function (e) {
     if (e.target.closest("#addCeremonyBtn") || e.target.closest("[data-editid]")) {
       setTimeout(function () {
-        if (window.__authPlan === "pro") applyOptFieldVisibility();
+        const plan = window.__authPlan;
+        if (plan === "pro" || plan === "business") applyOptFieldVisibility();
       }, 50);
     }
   });
@@ -272,7 +291,7 @@
     const btn = document.getElementById("upgradeBtn");
     if (titleEl) titleEl.textContent = title || "Upgrade to Pro";
     if (textEl) textEl.textContent = text || "";
-    if (btn) { btn.textContent = "Upgrade to Pro — €39/month →"; btn.href = STRIPE_PRO_LINK; }
+    if (btn) { btn.textContent = "See plans →"; btn.href = "../en/"; }
     if (modal) modal.classList.add("open");
   }
 

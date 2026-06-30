@@ -571,7 +571,10 @@ function formatDate(dStr) {
   if (!dStr) return "";
   const d = new Date(dStr);
   if (Number.isNaN(d.getTime())) return dStr;
-  const days = ["Κυριακή","Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο"];
+  const days = t(
+    ["Κυριακή","Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο"],
+    ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+  );
   const dayName = days[d.getDay()];
   const yyyy = d.getFullYear();
   const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -3578,33 +3581,34 @@ function hermesAnnouncementStatus(c) {
 }
 
 function hermesAnnouncementIsNeeded(c) {
-  return hermesAnnouncementStatus(c) !== "Δεν χρειάζεται";
+  const s = hermesAnnouncementStatus(c);
+  return s !== "Δεν χρειάζεται" && s !== "Not needed";
 }
 
 function hermesAnnouncementIsDone(c) {
   const status = hermesAnnouncementStatus(c);
-  return status === "Ολοκληρώθηκε" || hermesHasModuleEvent(ensureCeremonyCaseId(c), "announcements");
+  return status === "Ολοκληρώθηκε" || status === "Done" || hermesHasModuleEvent(ensureCeremonyCaseId(c), "announcements");
 }
 
 function hermesCompletionItems(c) {
   const burial = String(c?.burialType || "Ταφή").trim();
   const isCremation = burial === "Αποτεφρωση";
   const items = [
-    { key: "name", label: "Όνομα", weight: 10, ok: hermesIsFilled(c?.name), quick: false },
-    { key: "date", label: "Ημερομηνία", weight: 10, ok: hermesIsFilled(c?.date), quick: true },
-    { key: "time", label: "Ώρα", weight: 5, ok: hermesIsFilled(c?.time), quick: true },
-    { key: "place", label: "Τοποθεσία", weight: 10, ok: hermesIsFilled(c?.place), quick: true },
-    { key: "responsible", label: "Υπεύθυνος", weight: 12, ok: hermesIsFilled(c?.responsible), quick: true },
-    { key: "burialType", label: "Τρόπος", weight: 5, ok: hermesIsFilled(c?.burialType), quick: true },
-    { key: "coffin", label: "Φέρετρο", weight: 9, ok: hermesIsFilled(c?.coffin), quick: true },
-    { key: "set", label: "ΣΕΤ", weight: 6, ok: hermesIsFilled(c?.set), quick: true },
-    { key: "pickup", label: "Παραλαβή", weight: 8, ok: hermesIsFilled(c?.pickup), quick: true },
-    { key: "pickupDate", label: "Ημ/νία παραλαβής", weight: 7, ok: hermesIsFilled(c?.pickupDate), quick: true },
-    { key: "secondPerson", label: "2ο άτομο", weight: 8, ok: hermesIsFilled(c?.secondPerson), quick: true },
+    { key: "name", label: t("Όνομα","Name"), weight: 10, ok: hermesIsFilled(c?.name), quick: false },
+    { key: "date", label: t("Ημερομηνία","Date"), weight: 10, ok: hermesIsFilled(c?.date), quick: true },
+    { key: "time", label: t("Ώρα","Time"), weight: 5, ok: hermesIsFilled(c?.time), quick: true },
+    { key: "place", label: t("Τοποθεσία","Location"), weight: 10, ok: hermesIsFilled(c?.place), quick: true },
+    { key: "responsible", label: t("Υπεύθυνος","Coordinator"), weight: 12, ok: hermesIsFilled(c?.responsible), quick: true },
+    { key: "burialType", label: t("Τρόπος","Type"), weight: 5, ok: hermesIsFilled(c?.burialType), quick: true },
+    { key: "coffin", label: t("Φέρετρο","Coffin"), weight: 9, ok: hermesIsFilled(c?.coffin), quick: true },
+    { key: "set", label: t("ΣΕΤ","SET"), weight: 6, ok: hermesIsFilled(c?.set), quick: true },
+    { key: "pickup", label: t("Παραλαβή","Pickup"), weight: 8, ok: hermesIsFilled(c?.pickup), quick: true },
+    { key: "pickupDate", label: t("Ημ/νία παραλαβής","Pickup date"), weight: 7, ok: hermesIsFilled(c?.pickupDate), quick: true },
+    { key: "secondPerson", label: t("2ο άτομο","2nd person"), weight: 8, ok: hermesIsFilled(c?.secondPerson), quick: true },
     isCremation
-      ? { key: "cremationEscortCount", label: "Συνοδοί αποτέφρωσης", weight: 6, ok: hermesIsFilled(c?.cremationEscortCount), quick: true }
-      : { key: "pallbearers", label: "Φραγκοφόροι", weight: 6, ok: hermesIsFilled(c?.pallbearers), quick: true },
-    { key: "announcement", label: "Αγγελτήριο", weight: 4, ok: hermesAnnouncementIsDone(c), quick: true, optional: !hermesAnnouncementIsNeeded(c) }
+      ? { key: "cremationEscortCount", label: t("Συνοδοί αποτέφρωσης","Cremation escorts"), weight: 6, ok: hermesIsFilled(c?.cremationEscortCount), quick: true }
+      : { key: "pallbearers", label: t("Φραγκοφόροι","Pallbearers"), weight: 6, ok: hermesIsFilled(c?.pallbearers), quick: true },
+    { key: "announcement", label: t("Αγγελτήριο","Announcement"), weight: 4, ok: hermesAnnouncementIsDone(c), quick: true, optional: !hermesAnnouncementIsNeeded(c) }
   ];
   return items.filter(x => !x.optional);
 }
@@ -3665,7 +3669,7 @@ function hermesRenderCompletionList() {
   if (!box) return;
   const rows = hermesBuildCompletionRows().filter(r => r.score < 100).sort((a,b)=>a.score-b.score).slice(0, 8);
   if (!rows.length) {
-    box.innerHTML = `<div class="hermes-item empty"><strong>Όλα στο 100%</strong>Δεν βρέθηκε κάτι που να λείπει σε σημερινές/αυριανές τελετές.</div>`;
+    box.innerHTML = `<div class="hermes-item empty"><strong>${t("Όλα στο 100%","All at 100%")}</strong>${t("Δεν βρέθηκε κάτι που να λείπει σε σημερινές/αυριανές τελετές.","Nothing missing in today's/tomorrow's ceremonies.")}</div>`;
     return;
   }
   box.innerHTML = rows.map(r => {
@@ -3673,8 +3677,8 @@ function hermesRenderCompletionList() {
     const missing = r.missing.slice(0, 6).map(m => `<span>☐ ${esc(m.label)}</span>`).join("");
     const when = [c.date ? formatDate(c.date) : "", c.time || ""].filter(Boolean).join(" · ");
     return `<div class="hermes-completion-item ${hermesCompletionLevel(r.score)}">
-      <div class="completion-top"><div><strong>${esc(c.name || "Χωρίς όνομα")}</strong><small>${esc(when)}</small></div><b>${r.score}%</b></div>
-      <div class="completion-missing"><em>Λείπουν:</em>${missing}</div>
+      <div class="completion-top"><div><strong>${esc(c.name || t("Χωρίς όνομα","No name"))}</strong><small>${esc(when)}</small></div><b>${r.score}%</b></div>
+      <div class="completion-missing"><em>${t("Λείπουν:","Missing:")}</em>${missing}</div>
       <small class="completion-case">${esc(r.case_id || "")}</small>
     </div>`;
   }).join("");
@@ -3686,12 +3690,12 @@ function hermesRenderQuickFixes() {
   const fixes = [];
   hermesBuildCompletionRows().forEach(r => {
     (r.missing || []).filter(m => m.quick).slice(0, 3).forEach(m => {
-      fixes.push({ name: r.ceremony?.name || "Τελετή", label: m.label, score: r.score, id: r.case_id });
+      fixes.push({ name: r.ceremony?.name || t("Τελετή","Ceremony"), label: m.label, score: r.score, id: r.case_id });
     });
   });
   const top = fixes.slice(0, 6);
   if (!top.length) {
-    box.innerHTML = `<div class="hermes-item empty"><strong>Δεν έχει γρήγορες διορθώσεις</strong>Οι βασικές εκκρεμότητες φαίνονται τακτοποιημένες.</div>`;
+    box.innerHTML = `<div class="hermes-item empty"><strong>${t("Δεν έχει γρήγορες διορθώσεις","No quick fixes")}</strong>${t("Οι βασικές εκκρεμότητες φαίνονται τακτοποιημένες.","The main items appear to be in order.")}</div>`;
     return;
   }
   box.innerHTML = top.map(f => `<div class="hermes-quick-item"><strong>${esc(f.label)}</strong><span>${esc(f.name)}</span><small>${esc(f.id || "")}</small></div>`).join("");
@@ -3766,14 +3770,14 @@ function aiTomorrowStr() {
 }
 
 function aiCeremonyTitle(c) {
-  const name = c?.name || "Χωρίς όνομα";
-  const when = [c?.date ? formatDate(c.date) : "χωρίς ημερομηνία", c?.time || ""].filter(Boolean).join(" • ");
+  const name = c?.name || t("Χωρίς όνομα","No name");
+  const when = [c?.date ? formatDate(c.date) : t("χωρίς ημερομηνία","no date"), c?.time || ""].filter(Boolean).join(" • ");
   return `${name} — ${when}`;
 }
 
 function aiIsBlank(v) {
   const s = String(v ?? "").trim();
-  return !s || s === "-" || s === "Κανένας";
+  return !s || s === "-" || s === "Κανένας" || s === "None";
 }
 
 function aiCurrentWeekCeremonies() {

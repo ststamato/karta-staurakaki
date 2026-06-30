@@ -722,6 +722,26 @@ h2 { margin-top: 8px; }
   border: 1px solid rgba(255,255,255,.08) !important;
 }
 
+/* Cloud AI usage counter */
+#aiCloudUsage {
+  min-height: 0;
+  margin: 0 0 4px;
+}
+.ai-usage-badge {
+  display: inline-block;
+  font-size: 12px;
+  color: #6b7280;
+  background: #f3f0ea;
+  border-radius: 999px;
+  padding: 3px 12px;
+  margin: 6px 0 2px;
+}
+.ai-usage-badge.ai-usage-full {
+  color: #92400e;
+  background: #fef3c7;
+  font-weight: 600;
+}
+
 
 /* V29.1 — AI seen notes + free question box */
 .ai-question-box {

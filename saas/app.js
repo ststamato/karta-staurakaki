@@ -58,6 +58,34 @@ let edgePushTimer = null;
 const AI_EDGE_FUNCTION_NAME = "ai-assistant";
 const AI_EDGE_URL = `${SUPABASE_URL}/functions/v1/${AI_EDGE_FUNCTION_NAME}`;
 const AI_CLOUD_TIMEOUT_MS = 18000;
+const AI_CLOUD_DAILY_LIMIT = 10;
+
+function aiCloudUsageKey() {
+  return "fos_ai_cloud_" + getTodayStr();
+}
+
+function aiGetCloudUsage() {
+  const used = parseInt(localStorage.getItem(aiCloudUsageKey()) || "0", 10);
+  return { used, limit: AI_CLOUD_DAILY_LIMIT, remaining: Math.max(0, AI_CLOUD_DAILY_LIMIT - used) };
+}
+
+function aiIncrementCloudUsage() {
+  const key = aiCloudUsageKey();
+  const current = parseInt(localStorage.getItem(key) || "0", 10);
+  localStorage.setItem(key, String(current + 1));
+  aiUpdateCloudUsageBadge();
+}
+
+function aiUpdateCloudUsageBadge() {
+  const el = document.getElementById("aiCloudUsage");
+  if (!el) return;
+  const { used, limit, remaining } = aiGetCloudUsage();
+  if (remaining === 0) {
+    el.innerHTML = `<span class="ai-usage-badge ai-usage-full">☁ Cloud AI: ${used}/${limit} — Όριο ημέρας. Επαναφέρεται αύριο.</span>`;
+  } else {
+    el.innerHTML = `<span class="ai-usage-badge">☁ Cloud AI: ${used}/${limit} χρήσεις σήμερα</span>`;
+  }
+}
 
 let edgePushQueue = [];
 
@@ -4419,6 +4447,14 @@ async function aiAskQuestion() {
   if (!question) return alert("Γράψε πρώτα την ερώτηση.");
   if (!out) return;
 
+  const { remaining, used, limit } = aiGetCloudUsage();
+  if (remaining === 0) {
+    out.innerHTML = aiHtmlSection("Cloud AI", aiHtmlCard("Όριο ημερήσιων χρήσεων", `
+      <div class="ai-meta">Έχεις χρησιμοποιήσει ${used}/${limit} Cloud AI κλήσεις για σήμερα. Επαναφέρεται αύριο.</div>
+    `, "warning"));
+    return;
+  }
+
   aiLastMode = "question";
   out.innerHTML = aiHtmlSection("Ερώτηση", aiHtmlCard(question, `<div class="ai-meta">Ρωτάω τον βοηθό AI…</div>`));
 
@@ -4438,6 +4474,7 @@ async function aiAskQuestion() {
     clearTimeout(timer);
     if (!res.ok) throw new Error(`Edge Function απάντησε ${res.status}`);
     const data = await res.json();
+    aiIncrementCloudUsage();
     const answer = String(data.answer || data.report || "").trim() || aiLocalQuestionAnswer(question);
     const html = aiHtmlSection("Απάντηση AI", aiHtmlCard(question, `
       <div class="ai-note-text">${esc(answer)}</div>
@@ -4462,6 +4499,15 @@ async function aiRunCloud() {
   const out = $("aiAssistantOutput");
   if (!out) return;
 
+  const { remaining, used, limit } = aiGetCloudUsage();
+  if (remaining === 0) {
+    out.innerHTML = aiHtmlSection("Cloud AI", aiHtmlCard("Όριο ημερήσιων χρήσεων", `
+      <div class="ai-meta">Έχεις χρησιμοποιήσει ${used}/${limit} Cloud AI κλήσεις για σήμερα. Επαναφέρεται αύριο.</div>
+      <div class="ai-badge-row"><span class="ai-badge">Τοπικός AI διαθέσιμος</span></div>
+    `, "warning"));
+    return;
+  }
+
   out.innerHTML = aiHtmlSection("Cloud AI", aiHtmlCard("Στέλνω snapshot στο Supabase Edge Function…", `
     <div class="ai-meta">Σύνδεση με Supabase Cloud AI.</div>
   `));
@@ -4482,6 +4528,7 @@ async function aiRunCloud() {
     if (!res.ok) throw new Error(`Edge Function απάντησε ${res.status}`);
 
     const data = await res.json();
+    aiIncrementCloudUsage();
 
     // Υποστηρίζει και τις 2 εκδόσεις Edge Function:
     // 1) answer/report (ελεύθερο κείμενο)
@@ -4596,6 +4643,7 @@ function aiRun(mode = "full") {
 function openAIAssistant() {
   $("aiAssistantModal")?.classList.remove("hidden");
   aiEnsureChatHistoryUI();
+  aiUpdateCloudUsageBadge();
   aiRun("briefing");
   aiRenderChatHistory();
 }

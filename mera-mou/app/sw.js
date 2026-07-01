@@ -1,4 +1,4 @@
-const CACHE = 'mera-mou-v2';
+const CACHE = 'mera-mou-v3';
 const ASSETS = [
   './',
   './index.html',

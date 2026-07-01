@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Η Μέρα Μου</title>
 <meta name="description" content="Η Μέρα Μου — ο προσωπικός πίνακας ελέγχου της καθημερινότητάς σου.">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#f2f2f7">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon.svg">
@@ -49,7 +49,10 @@
         <button class="link-btn" data-goto="shopping">Πήγαινε στις Αγορές →</button>
       </div>
 
-      <button class="fab" id="quick-add-btn" aria-label="Γρήγορη προσθήκη">+</button>
+      <button class="fab-pill" id="quick-add-btn">
+        <svg class="fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Νέα υποχρέωση</span>
+      </button>
     </section>
 
     <!-- ΟΙΚΟΓΕΝΕΙΑ -->
@@ -159,11 +162,26 @@
   </main>
 
   <nav class="bottom-nav" id="bottom-nav">
-    <button class="nav-btn active" data-goto="today"><span class="nav-icon">🏠</span><span>Σήμερα</span></button>
-    <button class="nav-btn" data-goto="family"><span class="nav-icon">👪</span><span>Οικογένεια</span></button>
-    <button class="nav-btn" data-goto="home"><span class="nav-icon">🏡</span><span>Σπίτι</span></button>
-    <button class="nav-btn" data-goto="auto"><span class="nav-icon">🚗</span><span>Auto</span></button>
-    <button class="nav-btn" data-goto="shopping"><span class="nav-icon">🛒</span><span>Αγορές</span></button>
+    <button class="nav-btn active" data-goto="today">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5a.5.5 0 0 0 .5.5H10v-5.5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V20h3.5a.5.5 0 0 0 .5-.5V10"/></svg>
+      <span>Σήμερα</span>
+    </button>
+    <button class="nav-btn" data-goto="family">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M15 15.2c2.3.3 4 2 4 4.3"/></svg>
+      <span>Οικογένεια</span>
+    </button>
+    <button class="nav-btn" data-goto="home">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>
+      <span>Σπίτι</span>
+    </button>
+    <button class="nav-btn" data-goto="auto">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15 6 9.5a2 2 0 0 1 2-1.5h8a2 2 0 0 1 2 1.5L19.5 15"/><rect x="3" y="15" width="18" height="4.5" rx="1.5"/><circle cx="7.5" cy="19.5" r="1.2"/><circle cx="16.5" cy="19.5" r="1.2"/></svg>
+      <span>Auto</span>
+    </button>
+    <button class="nav-btn" data-goto="shopping">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1.2 10.2a1.5 1.5 0 0 1-1.5 1.3H8.7a1.5 1.5 0 0 1-1.5-1.3L6 8Z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+      <span>Αγορές</span>
+    </button>
   </nav>
 
 </div>

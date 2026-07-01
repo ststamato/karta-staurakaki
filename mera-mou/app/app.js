@@ -604,31 +604,31 @@
       return;
     }
 
-    if (event.target.id === 'profile-btn') { openSheet('profile-backdrop'); return; }
-    if (event.target.id === 'quick-add-btn') { openSheet('quickadd-backdrop'); return; }
-    if (event.target.id === 'add-member-btn') {
+    if (event.target.closest('#profile-btn')) { openSheet('profile-backdrop'); return; }
+    if (event.target.closest('#quick-add-btn')) { openSheet('quickadd-backdrop'); return; }
+    if (event.target.closest('#add-member-btn')) {
       document.getElementById('member-sheet-title').textContent = 'Νέο μέλος';
       document.getElementById('member-sheet').reset();
       document.getElementById('member-id').value = '';
       openSheet('member-backdrop');
       return;
     }
-    if (event.target.id === 'add-activity-btn') { openSheet('activity-backdrop'); return; }
-    if (event.target.id === 'add-home-btn') {
+    if (event.target.closest('#add-activity-btn')) { openSheet('activity-backdrop'); return; }
+    if (event.target.closest('#add-home-btn')) {
       document.getElementById('home-sheet-title').textContent = 'Νέα υποχρέωση σπιτιού';
       document.getElementById('home-sheet').reset();
       document.getElementById('home-id').value = '';
       openSheet('home-backdrop');
       return;
     }
-    if (event.target.id === 'add-vehicle-btn') {
+    if (event.target.closest('#add-vehicle-btn')) {
       document.getElementById('vehicle-sheet-title').textContent = 'Νέο όχημα';
       document.getElementById('vehicle-sheet').reset();
       document.getElementById('vehicle-id').value = '';
       openSheet('vehicle-backdrop');
       return;
     }
-    if (event.target.id === 'add-shopping-btn') { openSheet('shopping-backdrop'); return; }
+    if (event.target.closest('#add-shopping-btn')) { openSheet('shopping-backdrop'); return; }
 
     if (event.target.classList.contains('sheet-backdrop')) {
       event.target.hidden = true;

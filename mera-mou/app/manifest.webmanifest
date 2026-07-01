@@ -1,0 +1,19 @@
+{
+  "name": "Η Μέρα Μου",
+  "short_name": "Η Μέρα Μου",
+  "description": "Ο προσωπικός πίνακας ελέγχου της καθημερινότητάς σου.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#0f172a",
+  "lang": "el",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

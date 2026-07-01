@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Η Μέρα Μου</title>
+<meta name="description" content="Η Μέρα Μου — ο προσωπικός πίνακας ελέγχου της καθημερινότητάς σου.">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="phone">
+
+  <header class="topbar">
+    <div class="topbar-title" id="topbar-title">Σήμερα</div>
+    <button class="avatar-btn" id="profile-btn" aria-label="Προφίλ">ΣΤ</button>
+  </header>
+
+  <main class="screens">
+
+    <!-- ΣΗΜΕΡΑ -->
+    <section class="screen" id="screen-today" data-screen>
+      <div class="card card-brief">
+        <p class="brief-greeting">Καλημέρα, Σταύρο ☀️</p>
+        <p class="brief-line">Σήμερα έχεις <strong>3 εκκρεμότητες</strong>.</p>
+        <p class="brief-priority">Προτεραιότητα: Πλήρωσε πρώτα τον λογαριασμό της ΔΕΗ.</p>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Εκκρεμότητες ημέρας</h2>
+        <ul class="list">
+          <li class="list-item"><span class="dot dot-urgent"></span> Πληρωμή ΔΕΗ — αύριο</li>
+          <li class="list-item"><span class="dot dot-warn"></span> ΚΤΕΟ σε 12 μέρες</li>
+          <li class="list-item"><span class="dot"></span> Φάρμακο στις 21:00</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Λήγει κάτι;</h2>
+        <ul class="list">
+          <li class="list-item"><span class="dot dot-warn"></span> Ασφάλεια αυτοκινήτου — σε 5 ημέρες</li>
+          <li class="list-item"><span class="dot"></span> Εγγύηση πλυντηρίου — σε 20 ημέρες</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Τι πρέπει να αγοράσεις;</h2>
+        <p class="card-subtext">6 προϊόντα στη λίστα supermarket</p>
+        <button class="link-btn" data-goto="shopping">Δες τη λίστα →</button>
+      </div>
+
+      <button class="fab" id="quick-add-btn" aria-label="Γρήγορη προσθήκη">+</button>
+    </section>
+
+    <!-- ΟΙΚΟΓΕΝΕΙΑ -->
+    <section class="screen" id="screen-family" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Μέλη οικογένειας</h2>
+        <ul class="list">
+          <li class="list-item member">
+            <span class="member-name">Σταύρος</span>
+            <span class="member-meta">Γενέθλια: 14 Μαρτίου</span>
+          </li>
+          <li class="list-item member">
+            <span class="member-name">Ελένη</span>
+            <span class="member-meta">Γενέθλια: 2 Αυγούστου · Φάρμακο 21:00</span>
+          </li>
+          <li class="list-item member">
+            <span class="member-name">Νίκος</span>
+            <span class="member-meta">Γενέθλια: 30 Νοεμβρίου</span>
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Δραστηριότητες</h2>
+        <ul class="list">
+          <li class="list-item">Κολύμπι — Τρίτη 18:00 (Νίκος)</li>
+          <li class="list-item">Γιατρός — Πέμπτη 10:30 (Ελένη)</li>
+        </ul>
+      </div>
+      <button class="link-btn add-btn">+ Νέο μέλος</button>
+    </section>
+
+    <!-- ΣΠΙΤΙ -->
+    <section class="screen" id="screen-home" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Λογαριασμοί</h2>
+        <ul class="list">
+          <li class="list-item"><span class="dot dot-urgent"></span> ΔΕΗ — λήγει αύριο</li>
+          <li class="list-item"><span class="dot"></span> ΕΥΔΑΠ — λήγει σε 18 ημέρες</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Ασφάλειες &amp; συντηρήσεις</h2>
+        <ul class="list">
+          <li class="list-item"><span class="dot"></span> Ασφάλεια σπιτιού — ανανέωση σε 40 ημέρες</li>
+          <li class="list-item"><span class="dot"></span> Καθαρισμός καπναγωγού — προγραμματισμένο</li>
+        </ul>
+      </div>
+      <button class="link-btn add-btn">+ Νέα υποχρέωση</button>
+    </section>
+
+    <!-- ΑΥΤΟΚΙΝΗΤΟ -->
+    <section class="screen" id="screen-auto" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Toyota Yaris · ΙΧΧ 1234</h2>
+        <ul class="list">
+          <li class="list-item"><span class="dot dot-warn"></span> ΚΤΕΟ — σε 12 ημέρες</li>
+          <li class="list-item"><span class="dot dot-warn"></span> Ασφάλεια — σε 5 ημέρες</li>
+          <li class="list-item"><span class="dot"></span> Service — σε 8 ημέρες</li>
+          <li class="list-item"><span class="dot"></span> Τέλη κυκλοφορίας — πληρωμένα</li>
+          <li class="list-item"><span class="dot"></span> Ελαστικά — άλλαξαν πριν 6 μήνες</li>
+        </ul>
+      </div>
+      <button class="link-btn add-btn">+ Νέο όχημα</button>
+    </section>
+
+    <!-- ΑΓΟΡΕΣ -->
+    <section class="screen" id="screen-shopping" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Λίστα supermarket</h2>
+        <ul class="list checklist" id="shopping-list">
+          <li class="list-item checkable"><label><input type="checkbox"> Γάλα</label></li>
+          <li class="list-item checkable"><label><input type="checkbox"> Ψωμί</label></li>
+          <li class="list-item checkable"><label><input type="checkbox"> Αυγά</label></li>
+          <li class="list-item checkable"><label><input type="checkbox"> Απορρυπαντικό</label></li>
+          <li class="list-item checkable"><label><input type="checkbox"> Καφές</label></li>
+          <li class="list-item checkable"><label><input type="checkbox"> Χαρτί υγείας</label></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2 class="card-title">Συχνά προϊόντα</h2>
+        <div class="chips">
+          <span class="chip">Γάλα</span>
+          <span class="chip">Ψωμί</span>
+          <span class="chip">Νερό</span>
+          <span class="chip">Αυγά</span>
+        </div>
+      </div>
+      <button class="link-btn add-btn">+ Προϊόν</button>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="screen" id="screen-timeline" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Timeline</h2>
+        <p class="card-subtext">Ιστορικό ζωής, εξόδων και ενεργειών.</p>
+        <ul class="list">
+          <li class="list-item">Σήμερα — Πληρώθηκε ΔΕΗ</li>
+          <li class="list-item">Χθες — Service αυτοκινήτου</li>
+          <li class="list-item">Πριν 3 μέρες — Αγορές supermarket</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ΡΥΘΜΙΣΕΙΣ -->
+    <section class="screen" id="screen-settings" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Ρυθμίσεις</h2>
+        <ul class="list">
+          <li class="list-item">Γλώσσα — Ελληνικά</li>
+          <li class="list-item">Ειδοποιήσεις — Ενεργές</li>
+          <li class="list-item">Θέμα — Σύστημα</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- BACKUP -->
+    <section class="screen" id="screen-backup" data-screen hidden>
+      <div class="card">
+        <h2 class="card-title">Backup</h2>
+        <p class="card-subtext">Τα δεδομένα σου μένουν στο κινητό. Το cloud backup είναι λειτουργία Premium.</p>
+        <button class="link-btn">Αντίγραφο τώρα</button>
+      </div>
+    </section>
+
+    <!-- PREMIUM -->
+    <section class="screen" id="screen-premium" data-screen hidden>
+      <div class="card card-premium">
+        <h2 class="card-title">Premium — 2,99€/μήνα</h2>
+        <ul class="list">
+          <li class="list-item">Οικογένεια — πολλαπλά μέλη</li>
+          <li class="list-item">Απεριόριστες υπενθυμίσεις</li>
+          <li class="list-item">Περισσότερα αυτοκίνητα</li>
+          <li class="list-item">Cloud backup</li>
+          <li class="list-item">AI daily brief</li>
+          <li class="list-item">Συγχρονισμός συσκευών</li>
+        </ul>
+        <button class="link-btn primary">Δοκίμασε Premium</button>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-btn active" data-goto="today"><span class="nav-icon">🏠</span><span>Σήμερα</span></button>
+    <button class="nav-btn" data-goto="family"><span class="nav-icon">👪</span><span>Οικογένεια</span></button>
+    <button class="nav-btn" data-goto="home"><span class="nav-icon">🏡</span><span>Σπίτι</span></button>
+    <button class="nav-btn" data-goto="auto"><span class="nav-icon">🚗</span><span>Auto</span></button>
+    <button class="nav-btn" data-goto="shopping"><span class="nav-icon">🛒</span><span>Αγορές</span></button>
+  </nav>
+
+</div>
+
+<!-- Profile menu -->
+<div class="sheet-backdrop" id="profile-backdrop" hidden>
+  <div class="sheet" id="profile-sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-item" data-goto="timeline">Timeline</button>
+    <button class="sheet-item" data-goto="settings">Ρυθμίσεις</button>
+    <button class="sheet-item" data-goto="backup">Backup</button>
+    <button class="sheet-item" data-goto="premium">Premium</button>
+  </div>
+</div>
+
+<!-- Quick add -->
+<div class="sheet-backdrop" id="quickadd-backdrop" hidden>
+  <div class="sheet" id="quickadd-sheet">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title">Γρήγορη προσθήκη</h3>
+    <input class="quickadd-input" type="text" placeholder="π.χ. Πληρωμή ΟΤΕ αύριο" autocomplete="off">
+    <button class="link-btn primary" id="quickadd-save">Αποθήκευση</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
